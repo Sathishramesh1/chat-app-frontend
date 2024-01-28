@@ -10,7 +10,10 @@ function App() {
 
   return (
     <>
+    <div className='container'>
     <HomePage/>
+    </div>
+  
     {/* <Container>
       <Row>
         <Col md={4}>1 of 
