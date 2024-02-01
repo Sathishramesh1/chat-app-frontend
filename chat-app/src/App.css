@@ -1,34 +1,26 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  /* padding: 2rem; */
-  text-align: center;
+
+.App{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    min-height: 100vh;
+    background-color: #DDDEDD;
 }
 
-
-/* #homepage{
-  display: flex;
-  flex-direction: row;
-  box-sizing: border-box;
-  background-color: red;
-  width: 100vw;
-  justify-content: stretch;
-  min-height: 100vh;
-  
-} */
-
-/* #sidebar{
-  width: 30%; */
- 
-
-
-#chat{
-  /* width: 70%; */
-  /* background-color: red; */
+.homepage{
+    display: flex;
+    width: 100vw;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+   
 }
 
-#sidebar-layout{
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+.main{
+    display: flex;
+    background-color: red;
+    width: 90%;
+     height: 90%;
+    
 }

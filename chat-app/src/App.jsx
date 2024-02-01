@@ -1,17 +1,16 @@
 
 import './App.css'
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import HomePage from './Pages/HomePage'
+import MainContainer from './Components/MainContainer';
 
 function App() {
  
 
   return (
     <>
-    <div className='container'>
-    <HomePage/>
+    <div className='App' >
+  
+    <MainContainer/>
+      
     </div>
   
     {/* <Container>
