@@ -3,6 +3,7 @@
     width: 90vw;
     height: 90vh;
     display: flex;
+   
     border-radius: 20px;
 }
 
@@ -18,6 +19,7 @@
     /* background-color: red; */
     display: flex;
     flex-direction: column;
+    padding: 10px;
 }
 
 .sb-header{
@@ -104,12 +106,110 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
 }
 .message-container{
-    background-color: aqua;
+    /* background-color: aqua; */
+    display: flex;
+    flex-direction: column;
     flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
 }
 
 .chatheader-container{
+    
     display: flex;
     gap: 1rem;
     justify-content: space-between;
+    background-color: white;
+    border-radius: 20px;
+    padding: 10px;
+
+}
+
+.input-container{
+    background-color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 20px;
+    padding: 10px 10px;
+    margin: 10px;
+    display: flex;
+    justify-content: space-between;
+
+    input{
+       font-size: 1rem;
+        border: none;
+        outline :none
+        
+    }
+}
+
+.message-self{
+    display: flex;
+    justify-content: flex-end;
+    align-items: right;
+
+    padding: 1rem;
+   
+   span{
+    background-color: rgb(143, 188, 143);
+    padding: 1rem;
+    font-size: 1.25rem;
+    border-radius: 20px;
+   }
+}
+
+.message-other{
+    display: flex;
+
+    justify-content: flex-start;
+    padding: 1rem;
+
+    span{
+        background-color: rgb(223, 230, 223);
+        padding: 1rem;
+        font-size: 1.25rem;
+        border-radius: 20px;
+       }
+
+}
+
+
+.welcome-container{
+    flex: 0.7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    img{
+        height: 70%;
+        width: 70%;
+        object-fit: contain;
+    }
+}
+
+@media only screen 
+  and (min-device-width: 320px) 
+  and (max-device-width: 768px) {
+
+    .main-container{
+        width: 100%;
+        height: 100%;
+    }
+    .sb-searchBar{
+        input{
+            width: 100%;
+        }
+    }
+    .sidebar-container{
+        flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    }
+
+    .chatarea-container{
+        display: none;
+    }
+  /* Styles */
 }

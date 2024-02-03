@@ -1,7 +1,10 @@
 import React from 'react'
 import './myStyles.css'
 import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
 import { IconButton } from '@mui/material';
+import MessagefromSelf from './MessagefromSelf';
+import MessagetoOthers from './MessagetoOthers';
 
 function ChatArea({props}) {
   return (
@@ -16,8 +19,20 @@ function ChatArea({props}) {
             <DeleteIcon/>
           </IconButton>
         </div>
-        <div className='message-container'>message conatiner</div>
-        <div className='input-container'>input box</div>
+        <div className='message-container'>
+          <MessagefromSelf/>
+          <MessagetoOthers/>
+          <MessagefromSelf/>
+          <MessagetoOthers/>
+          <MessagefromSelf/>
+          <MessagetoOthers/>
+        </div>
+        <div className='input-container'>
+        <input type='text' placeholder='Type a Message' className='searchbox'/>
+        <IconButton>
+          <SendIcon/>
+        </IconButton>
+        </div>
     </div>
   )
 }

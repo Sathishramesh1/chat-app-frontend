@@ -3,6 +3,7 @@ import './myStyles.css'
 import SideBar from './SideBar'
 import WorkArea from './WorkArea'
 import ChatArea from './ChatArea'
+import Welcome from './Welcome'
 
 function MainContainer() {
   const dummy={
@@ -14,8 +15,8 @@ function MainContainer() {
   return (
     <div className='main-container'>
         <SideBar/>
-        {/* <WorkArea/> */}
-        <ChatArea props={dummy}/>
+        <Welcome/>        
+        {/* <ChatArea props={dummy}/> */}
     </div>
   )
 }
