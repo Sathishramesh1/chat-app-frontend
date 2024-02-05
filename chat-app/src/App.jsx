@@ -1,6 +1,8 @@
 
+
 import './App.css'
 import MainContainer from './Components/MainContainer';
+import SignIn from './Pages/Login';
 
 function App() {
  
@@ -9,20 +11,12 @@ function App() {
     <>
     <div className='App' >
   
-    <MainContainer/>
+    {/* <MainContainer/> */}
+    <SignIn/>
       
     </div>
   
-    {/* <Container>
-      <Row>
-        <Col md={4}>1 of 
-        </Col>
-        <Col md={8}>1 of 
-        </Col>
-       
-      </Row>
-     
-    </Container>  */}
+   
 
     </>
   )

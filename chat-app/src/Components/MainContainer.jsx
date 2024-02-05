@@ -4,6 +4,7 @@ import SideBar from './SideBar'
 import WorkArea from './WorkArea'
 import ChatArea from './ChatArea'
 import Welcome from './Welcome'
+import CreateGroup from './CreateGroup'
 
 function MainContainer() {
   const dummy={
@@ -15,7 +16,8 @@ function MainContainer() {
   return (
     <div className='main-container'>
         <SideBar/>
-        <Welcome/>        
+       <CreateGroup/>
+        {/* <Welcome/>         */}
         {/* <ChatArea props={dummy}/> */}
     </div>
   )
