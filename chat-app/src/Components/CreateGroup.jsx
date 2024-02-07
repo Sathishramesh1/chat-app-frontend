@@ -5,6 +5,8 @@ import './myStyles.css'
 
 function CreateGroup() {
   return (
+    <>
+    <div className='create-group-container'>    
     <div className='create-group'>
       <input type='text' placeholder='Enter a Group Name' className='sb-searchBar'/>
       <IconButton>
@@ -13,6 +15,12 @@ function CreateGroup() {
         
       </IconButton>
     </div>
+    <div className='create-group'>
+    <input type='text' placeholder='add a member' className='sb-searchBar'/>
+    </div>
+    </div>
+
+    </>
   )
 }
 

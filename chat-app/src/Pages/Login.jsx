@@ -12,12 +12,18 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import '../Components/myStyles.css'
 
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
-const defaultTheme = createTheme();
+const defaultTheme = createTheme({
+  palette: {
+    background: {
+      default: 'white',
+    },
+  },
+});
 
 export default function SignIn() {
   const handleSubmit = (event) => {
@@ -31,7 +37,7 @@ export default function SignIn() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs" sx={{width:'90%', height:'90%', backgroundColor:'white' }}>
+      <Container component="main" maxWidth="xs" fixed='true'  className='login'>
         <CssBaseline />
         <Box
           sx={{
@@ -41,6 +47,7 @@ export default function SignIn() {
             alignItems: 'center',
           }}
         >
+
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>

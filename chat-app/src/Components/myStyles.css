@@ -214,9 +214,26 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   /* Styles */
 }
 
-.create-group{
+  .create-group-container{
     flex: 0.7;
     align-self: center;
+    padding: 10px 10px ;
+    border-radius: 20px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    input{
+        border:none;
+        outline: none;
+        font-size: 1.25rem;
+      
+    }
+  }
+
+
+.create-group{
+   
+   
     padding: 10px 10px ;
     border-radius: 20px;
     margin: 10px;
@@ -228,6 +245,13 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         border:none;
         outline: none;
         font-size: 1.25rem;
-        /* font-size: 1rem; */
+       
     }
+}
+
+.login{
+    display: flex;
+    border-radius: 20px;
+    background-color: white;
+    
 }
