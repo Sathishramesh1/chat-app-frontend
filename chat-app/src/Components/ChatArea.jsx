@@ -6,14 +6,20 @@ import { IconButton } from '@mui/material';
 import MessagefromSelf from './MessagefromSelf';
 import MessagetoOthers from './MessagetoOthers';
 
-function ChatArea({props}) {
+function ChatArea() {
+  const dummy={
+    name:"hello",
+      lastMessage:"hi1",
+      timeStamp:"today"
+
+  }
   return (
     <div className='chatarea-container'>
         <div className='chatheader-container'>
-          <p className='con-icon'>{props.name[0]}</p>
+          <p className='con-icon'>{dummy.name[0]}</p>
           <div className='header-text'>
-            <p className='con-title'>{props.name}</p>
-            <p className='con-timeStamp'>{props.timeStamp}</p>
+            <p className='con-title'>{dummy.name}</p>
+            <p className='con-timeStamp'>{dummy.timeStamp}</p>
           </div>
           <IconButton>
             <DeleteIcon/>

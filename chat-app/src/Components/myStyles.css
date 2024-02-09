@@ -255,3 +255,9 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: white;
     
 }
+
+.user-group{
+  flex: 0.7;
+  background-color: greenyellow;
+    
+}

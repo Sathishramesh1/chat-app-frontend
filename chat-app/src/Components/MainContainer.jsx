@@ -5,19 +5,18 @@ import WorkArea from './WorkArea'
 import ChatArea from './ChatArea'
 import Welcome from './Welcome'
 import CreateGroup from './CreateGroup'
+import UserGroups from './UserGroups'
+import { Outlet } from 'react-router-dom'
 
 function MainContainer() {
-  const dummy={
-    name:"hello",
-      lastMessage:"hi1",
-      timeStamp:"today"
-
-  }
+ 
   return (
     <div className='main-container'>
         <SideBar/>
-       <CreateGroup/>
-        {/* <Welcome/>         */}
+        <Outlet/>
+        {/* <UserGroups/> */}
+       {/* <CreateGroup/> */}
+        
         {/* <ChatArea props={dummy}/> */}
     </div>
   )
