@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './myStyles.css'
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import { IconButton } from '@mui/material';
 import MessagefromSelf from './MessagefromSelf';
 import MessagetoOthers from './MessagetoOthers';
+import { createChat } from '../Services/apiServices';
 
 function ChatArea() {
   const dummy={
@@ -13,6 +14,22 @@ function ChatArea() {
       timeStamp:"today"
 
   }
+
+
+
+  useEffect(()=>{
+    const fetchChat=async()=>{
+      try {
+        const token=JSON.parse(localStorage.getItem('token'));
+        const data=await createChat('65b0b38198282806c9515468',token);
+        console.log(data);
+        console.log(token);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchChat();
+  },[])
   return (
     <div className='chatarea-container'>
         <div className='chatheader-container'>

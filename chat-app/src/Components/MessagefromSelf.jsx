@@ -3,7 +3,7 @@ import './myStyles.css'
 
 function MessagefromSelf() {
 
-    const message={}
+  
 
   return (
     <div className='message-self'>

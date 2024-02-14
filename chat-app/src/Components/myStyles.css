@@ -261,3 +261,34 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: greenyellow;
     
 }
+
+
+.suggestion-list{
+
+   
+    
+    max-height: 400px;
+    overflow-y: scroll;
+    list-style: none;
+    position: absolute;
+    background-color: aliceblue;
+    
+    
+      li{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding:10px;
+        border-bottom: 1px solid black;
+        
+        
+      }
+      li:hover{
+        background-color: gold;
+      }
+  
+  }
+  
+  .suggestion-list::-webkit-scrollbar{
+    display: none;
+  }

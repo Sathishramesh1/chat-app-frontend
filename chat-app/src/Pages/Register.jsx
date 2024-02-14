@@ -14,10 +14,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../Components/myStyles.css'
 import { useState } from 'react';
-import { LoginUser } from '../Services/apiServices';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUserToken } from '../redux/chatSlice'
-import { useNavigate } from 'react-router-dom';
+import { LoginUser, RegisterUser } from '../Services/apiServices';
+
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme({
@@ -28,11 +26,10 @@ const defaultTheme = createTheme({
   },
 });
 
-export default function SignIn() {
+export default function Register() {
 
-  const navigate=useNavigate();
- const dispatch=useDispatch();
   const [user,setUser]=useState({
+    name:"",
     email:"",
     password:"" 
   
@@ -40,14 +37,10 @@ export default function SignIn() {
   const handleSubmit = async(event) => {
     event.preventDefault();
     try {
-      // console.log(user)
-      const response = await LoginUser(user);
+        console.log(user)
+      const response = await RegisterUser(user);
+      
       console.log(response)
-      const token=response.data.jwttoken
-      console.log(token)
-   dispatch(setUserToken({token}));
-   localStorage.setItem("token",JSON.stringify(token))
-    navigate('/app/welcome')
       
     } catch (error) {
       console.log(error);
@@ -58,7 +51,7 @@ export default function SignIn() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs" fixed={true}  className='login'>
+      <Container component="main" maxWidth="xs" fixed='true'  className='login'>
         <CssBaseline />
         <Box
           sx={{
@@ -73,9 +66,20 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Register
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="name"
+              label="Name"
+              name="name"
+              autoComplete="name"
+              autoFocus
+              onChange={(e)=>setUser({...user,[e.target.name]: e.target.value })}
+            />
             <TextField
               margin="normal"
               required
@@ -85,7 +89,7 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
-              onChange={(e)=>setUser({...user,[e.target.name]:e.target.value})}
+              onChange={(e)=>setUser({...user,[e.target.name]: e.target.value })}
             />
             <TextField
               margin="normal"
@@ -95,7 +99,7 @@ export default function SignIn() {
               label="Password"
               type="password"
               id="password"
-              autoComplete="password"
+              autoComplete="current-password"
               onChange={(e)=>setUser({...user,[e.target.name]: e.target.value })}
             />
             <FormControlLabel
