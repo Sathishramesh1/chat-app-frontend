@@ -54,6 +54,7 @@
     padding: 5px 10px;
     margin: 10px;
     flex: 1;
+    overflow-y: auto;
 
 }
 

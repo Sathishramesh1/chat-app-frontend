@@ -41,3 +41,32 @@ export const createChat = async (payload,authToken) => {
     const response = await axios.post(`${BASE_URL}/chat/`,{userId:payload},{headers});
     return response;
 };
+
+export const getAllChat = async (authToken) => {
+
+    const headers = {
+        'x-auth-token':authToken,
+        'Content-Type':'application/json', 
+    };
+    const response = await axios.get(`${BASE_URL}/chat/`,{headers});
+    return response;
+};
+export const getChat = async (payload,authToken) => {
+
+    const headers = {
+        'x-auth-token':authToken,
+        'Content-Type':'application/json', 
+    };
+    const response = await axios.get(`${BASE_URL}/message/${payload}`,{headers});
+    return response;
+};
+
+export const sendMessage = async (payload,authToken) => {
+
+    const headers = {
+        'x-auth-token':authToken,
+        'Content-Type':'application/json', 
+    };
+    const response = await axios.post(`${BASE_URL}/message/`,payload,{headers});
+    return response;
+};

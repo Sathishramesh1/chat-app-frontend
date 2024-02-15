@@ -9,6 +9,7 @@ const chatSlice = createSlice({
         },
         myChats: [],
         searchUsers: [],
+        selectedChat:'',
         selectUser: "",
         selectForGrp: [],
         allMessages: [],
@@ -31,6 +32,9 @@ const chatSlice = createSlice({
            
             state.searchUsers =action.payload
             console.log(state.searchUsers);
+        },
+        setSelectedChat:(state,action)=>{
+            state.selectedChat=action.payload
         },
         setSelectUser:(state, action)=>{
             state.selectUser = action.payload
@@ -57,5 +61,5 @@ const chatSlice = createSlice({
     }
 });
 
-export const { setUserToken,setMyChats, setsearchUsers, setSelectUser, setSelectForGrp, removeSelectForGrp, setEmpty, setAllMessages, setSingleMessage, setNewMessage } = chatSlice.actions
+export const { setUserToken,setMyChats,setSelectedChat, setsearchUsers, setSelectUser, setSelectForGrp, removeSelectForGrp, setEmpty, setAllMessages, setSingleMessage, setNewMessage } = chatSlice.actions
 export default chatSlice.reducer

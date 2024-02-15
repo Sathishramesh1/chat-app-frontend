@@ -9,6 +9,7 @@ import ChatArea from './Components/ChatArea';
 import CreateGroup from './Components/CreateGroup';
 import Register from './Pages/Register';
 import { useSelector } from 'react-redux';
+import { io } from "socket.io-client";
 
 function App() {
  
@@ -27,7 +28,7 @@ const token=useSelector((state)=>state.chat.user.token);
       <Route exact path='/' element={<SignIn/>}/>
       <Route path='app' element={token?<MainContainer/>:<Navigate to='/' />}>
       <Route path='welcome' element={<Welcome/>}/>
-      <Route path='chat' element={<ChatArea/>}/>
+      <Route path='chat/:chatId' element={<ChatArea/>}/>
        <Route path='create-group' element={<CreateGroup/>}/>
 
       </Route>
