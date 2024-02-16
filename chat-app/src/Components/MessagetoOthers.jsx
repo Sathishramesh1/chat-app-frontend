@@ -1,10 +1,10 @@
 import React from 'react'
 import './myStyles.css'
 
-function MessagetoOthers() {
+function MessagetoOthers({content}) {
   return (
     <div className='message-other'>
-    <span>i am fine how are you?
+    <span>{content}
     </span>
     </div>
   )

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './myStyles.css'
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
@@ -8,13 +8,21 @@ import MessagetoOthers from './MessagetoOthers';
 import { createChat, getChat, sendMessage } from '../Services/apiServices';
 import { useParams } from 'react-router-dom';
 import { io } from "socket.io-client";
+import { useDispatch, useSelector } from 'react-redux';
+import { setAllMessages, setEmpty, setSelectedChat, setSingleMessage } from '../redux/chatSlice';
 
 
 const socket = io("https://chat-app-v1rl.onrender.com");
 
 function ChatArea() {
-  
+
+  const dispatch = useDispatch();
+  const {allMessages}=useSelector((state)=>state.chat);
+  const {selectedChat}=useSelector((state)=>state.chat);
   const token=JSON.parse(localStorage.getItem('token'));
+  const id=JSON.parse(localStorage.getItem('user'));
+  const messagesEndRef = useRef(null);
+        
   const {chatId}=useParams();
   const [message,setMessage]=useState({content:''});
  
@@ -25,18 +33,36 @@ function ChatArea() {
       timeStamp:"today"
 
   }
-  socket.on("message received",(md)=>{
-    console.log(md);
-  })
+ 
 
 const handleSend=async()=>{
   try {
+
+    if (!message.content.trim()) {
+      return;
+    }
     console.log(token)
-    let msg={...message,_id:chatId}
-    socket.emit("new message",msg)
-    const data=await sendMessage({...message,chatId:chatId},token);
+    let resetCopy={...message}
     
-    // console.log(data)
+    let msg={...resetCopy,_id:chatId,sender:{_id:id}}
+    
+    dispatch(setSingleMessage(msg));
+    
+    scrollToBottom(); 
+    setMessage({ content: '' });
+    socket.emit("new message",msg)
+
+    
+    
+    const data=await sendMessage({...resetCopy,chatId:chatId},token);
+    console.log(data)
+    // msg._id=data.data.chat._id
+    // msg.sender={...data.data.sender}
+    // console.log(msg)
+    
+    
+    
+    
   } catch (error) {
     console.log(error)
     
@@ -47,55 +73,82 @@ const handleSend=async()=>{
     const fetchChat=async()=>{
       try {
         const token=JSON.parse(localStorage.getItem('token'));
-        
+       
         const data=await getChat(chatId,token);
-        // console.log(data);
+        console.log(data);
+       
+        dispatch(setAllMessages(data.data));
+        dispatch(setSelectedChat(data.data[0].chat));
+        // console.log()
+        // console.log(allMessages)
         // console.log(token);
       } catch (error) {
         console.log(error)
       }
     }
     fetchChat();
-    console.log(message)
     
-  },[chatId,token]);
+    return ()=>{
+      dispatch(setEmpty());
+    }
+    
+  },[chatId]);
   useEffect(() => {
     socket.emit("join chat", chatId);
 
     socket.on("message received", (msg) => {
-      console.log(msg);
-      // Handle received message here if needed
+      
+      dispatch(setSingleMessage(msg))
+    
     });
 
     return () => {
-      socket.off("message received"); // Cleanup event listener
+      socket.off("message received"); // Cleanup event 
     };
   }, [chatId]);
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView()
+  };
+
+  
+
+  useEffect(() => {
+    console.log("All messages changed:", allMessages); 
+    
+     scrollToBottom(); 
+  }, [allMessages]);
+
+
   return (
+  
     <div className='chatarea-container'>
         <div className='chatheader-container'>
-          <p className='con-icon'>{dummy.name[0]}</p>
+          <p className='con-icon'>{!selectedChat?.isGroupChat &&<img />}</p>
           <div className='header-text'>
-            <p className='con-title'>{dummy.name}</p>
+            <p className='con-title'>{selectedChat && selectedChat.users && selectedChat.users.length > 1 && selectedChat.users[1].name}</p>
             <p className='con-timeStamp'>{dummy.timeStamp}</p>
           </div>
           <IconButton>
             <DeleteIcon/>
           </IconButton>
         </div>
-        <div className='message-container'>
-          <MessagefromSelf/>
-          <MessagetoOthers/>
-          <MessagefromSelf/>
-          <MessagetoOthers/>
-          <MessagefromSelf/>
-          <MessagetoOthers/>
+        <div className='message-container' >
+         {allMessages.length>0&&[...allMessages].map((ele)=>(  
+          <div ref={messagesEndRef} key={ele?._id}>
+          {ele.sender._id===id?(<MessagefromSelf content={ele.content} key={ele?._id}/>)
+         :(<MessagetoOthers content={ele.content} key={ele?._id}/>)}
+         </div>
+          
+         ))}
         </div>
         <div className='input-container'>
         <input type='text' placeholder='Type a Message' className='searchbox'
           value={message.content}
-          onChange={(e)=>setMessage({ content: e.target.value })}
+          onChange={(e) => setMessage((prevState) => ({
+    ...prevState,
+    content: e.target.value
+  }))}
         />
         <IconButton onClick={handleSend}>
           <SendIcon/>

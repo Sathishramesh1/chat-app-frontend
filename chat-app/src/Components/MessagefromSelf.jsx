@@ -1,13 +1,13 @@
 import React from 'react'
 import './myStyles.css'
 
-function MessagefromSelf() {
+function MessagefromSelf({content}) {
 
   
 
   return (
     <div className='message-self'>
-    <span>hi ,how are yoy?</span>
+    <span>{content}</span>
 </div>
   )
 }

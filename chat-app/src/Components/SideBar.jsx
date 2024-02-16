@@ -23,11 +23,7 @@ const searchUsers=useSelector((state)=>state.chat.searchUsers)
 const navigate=useNavigate();
 const [user,setUser]=useState(null);
 const dispatch=useDispatch();
-  const [Conversation, setConversation] = useState([
   
-
-  ])
-
 
 
   const handleCreation=async(userId)=>{

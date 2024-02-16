@@ -9,7 +9,6 @@ import ChatArea from './Components/ChatArea';
 import CreateGroup from './Components/CreateGroup';
 import Register from './Pages/Register';
 import { useSelector } from 'react-redux';
-import { io } from "socket.io-client";
 
 function App() {
  

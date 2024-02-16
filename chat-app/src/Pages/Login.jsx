@@ -44,9 +44,11 @@ export default function SignIn() {
       const response = await LoginUser(user);
       console.log(response)
       const token=response.data.jwttoken
+      const id=response.data.user
       console.log(token)
    dispatch(setUserToken({token}));
    localStorage.setItem("token",JSON.stringify(token))
+   localStorage.setItem("user",JSON.stringify(id));
     navigate('/app/welcome')
       
     } catch (error) {

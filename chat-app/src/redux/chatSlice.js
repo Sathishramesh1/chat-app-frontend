@@ -9,7 +9,7 @@ const chatSlice = createSlice({
         },
         myChats: [],
         searchUsers: [],
-        selectedChat:'',
+        selectedChat:[],
         selectUser: "",
         selectForGrp: [],
         allMessages: [],
@@ -48,12 +48,24 @@ const chatSlice = createSlice({
         setEmpty:(state)=>{
             state.selectForGrp = []
             state.searchUsers = []
+            state.allMessages=[];
+            state.selectedChat=[];
         },
         setAllMessages:(state, action)=>{
-            state.allMessages = action.payload
+            const uniqueMessages = action.payload.filter(newMessage => {
+                // Check if the _id of the new message already exists in the allMessages array
+                return !state.allMessages.some(existingMessage => existingMessage._id === newMessage._id);
+            });
+        
+            // Concatenate the unique messages with the existing messages in the state
+            state.allMessages = [...state.allMessages, ...uniqueMessages];
+            
         },
         setSingleMessage:(state, action)=>{
-            state.allMessages = [...state.allMessages, action.payload]
+           
+                state.allMessages.push(action.payload);
+
+            
         },
         setNewMessage:(state, action)=>{
             state.newMessage = action.payload
