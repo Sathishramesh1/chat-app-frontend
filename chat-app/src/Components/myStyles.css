@@ -5,6 +5,9 @@
     display: flex;
    
     border-radius: 20px;
+
+
+
 }
 
 .sidebar-container{
@@ -18,9 +21,27 @@
     flex: 0.7;
     /* background-color: red; */
     display: flex;
-   
+    max-height: 100%;   
     flex-direction: column;
     padding: 10px;
+
+
+   
+
+}
+
+
+@media only screen 
+and (min-device-width: 320px) 
+and (max-device-width: 768px) {
+    
+    .chatarea-container{
+    flex:1;
+    display: flex;
+max-height: 100%;   
+flex-direction: column;
+padding: 10px;}
+
 }
 
 .sb-header{
@@ -200,6 +221,8 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     .main-container{
         width: 100vw;
         height: 100vh;
+        display: flex;
+        /* flex-direction: column; */
     }
     .sb-searchBar{
         input{
@@ -210,14 +233,12 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    /* min-height: 100vh; */
     overflow-y: auto;
     scrollbar-width: none;
     }
 
-    .chatarea-container{
-        display: none;
-    }
+    
   /* Styles */
 }
 

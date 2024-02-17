@@ -5,7 +5,7 @@ import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import NightlightIcon from '@mui/icons-material/Nightlight';
-import { IconButton } from '@mui/material';
+import {  Button, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ConversationItem from './Conversation';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +13,13 @@ import { createChat, getAllChat, searchUserApi } from '../Services/apiServices';
 import { setsearchUsers } from '../redux/chatSlice';
 import { setMyChats } from '../redux/chatSlice';
 import { useNavigate } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 
 
 function SideBar() {
@@ -23,7 +30,19 @@ const searchUsers=useSelector((state)=>state.chat.searchUsers)
 const navigate=useNavigate();
 const [user,setUser]=useState(null);
 const dispatch=useDispatch();
-  
+
+
+
+  const [open, setOpen] = useState(false)
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
 
 
   const handleCreation=async(userId)=>{
@@ -74,7 +93,10 @@ const dispatch=useDispatch();
     }
    fetchChat();
 
-  },[user])
+  },[user]);
+  
+
+  
   return (
     <div className='sidebar-container'>
 
@@ -92,7 +114,7 @@ const dispatch=useDispatch();
    <IconButton>
    <GroupAddIcon/>
    </IconButton>
-   <IconButton>
+   <IconButton onClick={handleClickOpen}>
    <AddCircleIcon/>
    </IconButton>
    <IconButton>
@@ -121,10 +143,52 @@ const dispatch=useDispatch();
    <div className='sb-conversations'>
    {myChats.map((ele,i)=>{
     
-    return <ConversationItem props={ele} key={ele._id} />
+    return <ConversationItem props={ele} key={ele._id}  />
    })}
    
+    
+
+      
    </div>
+
+   <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          component: 'form',
+          onSubmit: (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.currentTarget);
+            const formJson = Object.fromEntries(formData.entries());
+            const email = formJson.email;
+            console.log(email);
+            handleClose();
+          },
+        }}
+      ><DialogTitle>Subscribe</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To subscribe to this website, please enter your email address here. We
+            will send updates occasionally.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            id="name"
+            name="email"
+            label="Email Address"
+            type="email"
+            fullWidth
+            variant="standard"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button type="submit">Subscribe</Button>
+        </DialogActions>
+      </Dialog>
+
 
     </div>
   )

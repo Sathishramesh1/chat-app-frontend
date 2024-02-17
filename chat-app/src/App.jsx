@@ -20,15 +20,14 @@ const token=useSelector((state)=>state.chat.user.token);
     <>
     <div className='App' >
   
-    {/* <MainContainer/> */}
-    {/* <SignIn/> */}
+    
     <Routes>
 
       <Route exact path='/' element={<SignIn/>}/>
       <Route path='app' element={token?<MainContainer/>:<Navigate to='/' />}>
       <Route path='welcome' element={<Welcome/>}/>
       <Route path='chat/:chatId' element={<ChatArea/>}/>
-       <Route path='create-group' element={<CreateGroup/>}/>
+       {/* <Route path='create-group' element={<CreateGroup/>}/> */}
 
       </Route>
       <Route path='/register' element={<Register/>

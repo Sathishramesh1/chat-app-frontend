@@ -7,6 +7,8 @@ const chatSlice = createSlice({
             token:localStorage.getItem('token')||null,
             email:null
         },
+        isSmallScreen: window.innerWidth <= 768,
+        showChatArea: false,
         myChats: [],
         searchUsers: [],
         selectedChat:[],
@@ -18,6 +20,12 @@ const chatSlice = createSlice({
     },
 
     reducers:{
+        setIsSmallScreen: (state, action) => {
+            state.isSmallScreen = action.payload;
+        },
+        setShowChatArea: (state, action) => {
+            state.showChatArea = action.payload;
+        },
 
         setUserToken:(state,action)=>{
            
@@ -69,9 +77,11 @@ const chatSlice = createSlice({
         },
         setNewMessage:(state, action)=>{
             state.newMessage = action.payload
-        }
+        },
+
+       
     }
 });
 
-export const { setUserToken,setMyChats,setSelectedChat, setsearchUsers, setSelectUser, setSelectForGrp, removeSelectForGrp, setEmpty, setAllMessages, setSingleMessage, setNewMessage } = chatSlice.actions
+export const { setIsSmallScreen,setShowChatArea,setUserToken,setMyChats,setSelectedChat, setsearchUsers, setSelectUser, setSelectForGrp, removeSelectForGrp, setEmpty, setAllMessages, setSingleMessage, setNewMessage } = chatSlice.actions
 export default chatSlice.reducer

@@ -1,18 +1,23 @@
 import React from 'react'
 import './myStyles.css'
 import { useNavigate } from 'react-router-dom'
-import { setSelectedChat } from '../redux/chatSlice';
+import { setSelectedChat, setShowChatArea } from '../redux/chatSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 
 function ConversationItem({props}) {
   const navigate=useNavigate();
   const dispatch=useDispatch();
-
+  const {isSmallScreen}=useSelector((state)=>state.chat)
    
 
   const handleNavigation=(user)=>{
-    console.log(user);
+    
+    
+if(isSmallScreen){
+  dispatch(setShowChatArea(true));
+}
+
     dispatch(setSelectedChat(user));
 
     navigate(`chat/${props._id}`)
