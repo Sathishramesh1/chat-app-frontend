@@ -15,6 +15,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../Components/myStyles.css'
 import { useState } from 'react';
 import { LoginUser, RegisterUser } from '../Services/apiServices';
+import { useRef } from 'react';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -26,20 +29,38 @@ const defaultTheme = createTheme({
   },
 });
 
+
+
+
+//valiadation schema
+const validationSchema = yup.object({
+  name: yup
+    .string('Enter your name')
+    .required('Name is required'),
+    email: yup
+    .string('Enter your email')
+    .email('Enter a valid email')
+    .required('Email is required'),
+
+  password: yup
+    .string('Enter your password')
+    .min(8, 'Password should be of minimum 8 characters length')
+    .required('Password is required'),
+});
+
+
+
+
 export default function Register() {
 
-  const [user,setUser]=useState({
-    name:"",
-    email:"",
-    password:"" 
   
-  });
-  const handleSubmit = async(event) => {
-    event.preventDefault();
+
+
+  const handleSubmit = async() => {
+    
     try {
-        console.log(user)
-      const response = await RegisterUser(user);
-      
+             
+      const response = await RegisterUser(formik.values);
       console.log(response)
       
     } catch (error) {
@@ -49,13 +70,35 @@ export default function Register() {
    
   };
 
+
+
+
+  //formik validation
+const formik = useFormik({
+  initialValues: {
+    name: '',
+    email:'',
+    password: '',
+  },
+  validationSchema: validationSchema,
+  onSubmit: () => {
+   
+     handleSubmit();
+     formik.resetForm();
+    
+  },
+});
+
+
+
+
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs" fixed='true'  className='login'>
+      <Container component="main" maxWidth="xs" fixed={true}  className='login'>
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 4,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -68,7 +111,7 @@ export default function Register() {
           <Typography component="h1" variant="h5">
             Register
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 1 }} >
           <TextField
               margin="normal"
               required
@@ -78,7 +121,11 @@ export default function Register() {
               name="name"
               autoComplete="name"
               autoFocus
-              onChange={(e)=>setUser({...user,[e.target.name]: e.target.value })}
+              value={formik.values.name}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                 error={formik.touched.name && Boolean(formik.errors.name)}
+                 helperText={formik.touched.name && formik.errors.name}
             />
             <TextField
               margin="normal"
@@ -89,7 +136,14 @@ export default function Register() {
               name="email"
               autoComplete="email"
               autoFocus
-              onChange={(e)=>setUser({...user,[e.target.name]: e.target.value })}
+              value={formik.values.email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.email && Boolean(formik.errors.email)}
+                  helperText={formik.touched.email && formik.errors.email}
+
+              
+
             />
             <TextField
               margin="normal"
@@ -100,7 +154,11 @@ export default function Register() {
               type="password"
               id="password"
               autoComplete="current-password"
-              onChange={(e)=>setUser({...user,[e.target.name]: e.target.value })}
+              value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched.password && Boolean(formik.errors.password)}
+                  helperText={formik.touched.password && formik.errors.password}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -121,8 +179,8 @@ export default function Register() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                <Link href="/" variant="body2">
+                  {"Already have an account? Sign in"}
                 </Link>
               </Grid>
             </Grid>

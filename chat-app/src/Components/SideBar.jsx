@@ -83,7 +83,6 @@ const dispatch=useDispatch();
     const fetchChat=async()=>{
       try {
         const data=await getAllChat(token);
-        console.log(data,"hjello")
         dispatch(setMyChats(data.data))
         
       } catch (error) {
@@ -94,6 +93,16 @@ const dispatch=useDispatch();
    fetchChat();
 
   },[user]);
+
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Backspace' && !user) {
+      // Dispatch an action to clear the search results
+      dispatch(setsearchUsers([]));
+    }
+  };
+
+  
   
 
   
@@ -129,6 +138,7 @@ const dispatch=useDispatch();
     <input type='text' placeholder='search' className='searchbox'
 
       onChange={(e)=>setUser(e.target.value)}
+      onKeyDown={handleKeyDown}
     />
     
    </div>
@@ -160,16 +170,16 @@ const dispatch=useDispatch();
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries(formData.entries());
+            const name=formJson.user
             const email = formJson.email;
-            console.log(email);
+            console.log(email,name);
             handleClose();
           },
         }}
       ><DialogTitle>Subscribe</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To subscribe to this website, please enter your email address here. We
-            will send updates occasionally.
+           Create a New Group
           </DialogContentText>
           <TextField
             autoFocus
@@ -177,15 +187,27 @@ const dispatch=useDispatch();
             margin="dense"
             id="name"
             name="email"
-            label="Email Address"
-            type="email"
+            label="Group Name"
+            type="text"
             fullWidth
             variant="standard"
+          />
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            id="user"
+            name="user"
+            label="Users"
+            type="text"
+            fullWidth
+            variant="standard"
+           
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Subscribe</Button>
+          <Button type="submit">Create</Button>
         </DialogActions>
       </Dialog>
 

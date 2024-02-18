@@ -31,18 +31,20 @@ if(isSmallScreen){
   return (
     <div className='conversation-container' onClick={()=>handleNavigation(props)} >
     
+    
     {props.chatName === "sender" ? (
       <>
         <p className='con-icon'>{props?.users[1]?.name.charAt(0)}</p>
          <p className='con-title'>{props?.users[1]?.name}</p>
-           <p className='con-latestMessage'>{props?.lastestMessage?.content}</p>
+           <p className='con-latestMessage'>{props?.latestMessage?.content}</p>
         <p className='con-timeStamp'>{props.timeStamp}</p>
+       
          </>
       ) : (
         <>
         <p className='con-icon'>{props.chatName.charAt(0)}</p>
         <p className='con-title'>{props?.chatName}</p>
-        <p className='con-latestMessage'>{props.lastestMessage}</p>
+        <p className='con-latestMessage'>{props?.latestMessage?.content}</p>
         <p className='con-timeStamp'>{props.timeStamp}</p>
         </>
       )}

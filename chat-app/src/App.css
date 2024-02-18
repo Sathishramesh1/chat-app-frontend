@@ -5,7 +5,8 @@
     align-items: center;
     width: 100vw;
     min-height: 100vh;
-    background-color: #DDDEDD;
+    /* background-color: #DDDEDD; */
+    background-image: url("../public/chat-background.png")
 }
 
 

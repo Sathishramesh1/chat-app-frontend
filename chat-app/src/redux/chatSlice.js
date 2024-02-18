@@ -39,7 +39,7 @@ const chatSlice = createSlice({
         setsearchUsers:(state, action)=>{
            
             state.searchUsers =action.payload
-            console.log(state.searchUsers);
+           
         },
         setSelectedChat:(state,action)=>{
             state.selectedChat=action.payload
@@ -76,7 +76,17 @@ const chatSlice = createSlice({
             
         },
         setNewMessage:(state, action)=>{
-            state.newMessage = action.payload
+            
+            state.myChats = state.myChats.map((chat) => {
+                if (chat._id === action.payload._id) {
+                    return {
+                        ...chat,
+                        latestMessage: action.payload
+                    };
+                } else {
+                    return chat;
+                }
+            });
         },
 
        

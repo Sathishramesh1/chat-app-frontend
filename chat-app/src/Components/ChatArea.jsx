@@ -9,8 +9,9 @@ import { createChat, getChat, sendMessage } from '../Services/apiServices';
 import { useParams } from 'react-router-dom';
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllMessages, setEmpty, setSelectedChat, setSingleMessage,setShowChatArea } from '../redux/chatSlice';
+import { setAllMessages, setEmpty, setSelectedChat, setSingleMessage,setShowChatArea,setNewMessage } from '../redux/chatSlice';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 const socket = io("https://chat-app-v1rl.onrender.com");
 
@@ -26,6 +27,7 @@ function ChatArea() {
 
   const {chatId}=useParams();
   const [message,setMessage]=useState({content:''});
+  
  
   // console.log(chatId)
   const dummy={
@@ -40,18 +42,22 @@ const handleSend=async()=>{
   try {
 
     if (!message.content.trim()) {
+      
+      console.log("no message")
       return;
     }
-    console.log(token)
+    // console.log(token)
     let resetCopy={...message}
     
+    console.log(message)
     let msg={...resetCopy,_id:chatId,sender:{_id:id}}
     
     dispatch(setSingleMessage(msg));
     
     scrollToBottom(); 
-    setMessage({ content: '' });
+   
     socket.emit("new message",msg)
+    setMessage({content:''});
 
     
     
@@ -80,6 +86,7 @@ const handleSend=async()=>{
        
         dispatch(setAllMessages(data.data));
         dispatch(setSelectedChat(data.data[0].chat));
+        // console.log([...allMessages])
         socket.emit("setup", { data: { id: id } }); 
        
       } catch (error) {
@@ -97,7 +104,8 @@ const handleSend=async()=>{
     socket.emit("join chat", chatId);
 
     socket.on("message received", (msg) => {
-      
+      console.log(msg,"checking")
+      dispatch(setNewMessage(msg));
       dispatch(setSingleMessage(msg));
     
     });
@@ -139,7 +147,7 @@ const handleSend=async()=>{
   
 
   useEffect(() => {
-    console.log("All messages changed:", allMessages); 
+    // console.log("All messages changed:", allMessages); 
     
      scrollToBottom(); 
   }, [allMessages]);
@@ -153,6 +161,7 @@ const handleSend=async()=>{
 
         {showChatArea&&<IconButton onClick={()=>dispatch(setShowChatArea(false))}>
             <KeyboardBackspaceIcon/>
+            
           </IconButton>}
         
           <p className='con-icon'>{!selectedChat?.isGroupChat &&<img />}</p>
@@ -164,15 +173,18 @@ const handleSend=async()=>{
             <p className='con-timeStamp'>{dummy.timeStamp}</p>
           </div>
           <IconButton>
-            <DeleteIcon/>
+            {/* <DeleteIcon/> */}
+            <MoreHorizIcon/>
           </IconButton>
         </div>
         <div className='message-container' >
          {allMessages.length>0&&[...allMessages].map((ele)=>(  
-          <div ref={messagesEndRef} key={ele?._id}>
-          {ele.sender._id===id?(<MessagefromSelf content={ele.content} key={ele?._id}/>)
+         
+          <div ref={messagesEndRef} >
+          {console.log(ele,"el;e")}
+          {ele.sender._id===id?(<MessagefromSelf content={ele} key={ele?._id}/>)
          :
-         (<MessagetoOthers content={ele.content} key={ele?._id}/>)}
+         (<MessagetoOthers content={ele}  key={ele?._id}/>)}
          </div>
           
          ))}
@@ -181,18 +193,18 @@ const handleSend=async()=>{
         <input type='text' placeholder='Type a Message' className='searchbox'
           value={message.content}
           onChange={(e) => {
-            setMessage((prevState) => ({
-    ...prevState,
-    content: e.target.value
-  }));
- 
-  } 
-  }
+          setMessage(prev => ({
+            ...prev,
+            content: e.target.value
+          }));
+        }}
   onKeyDown={() => {
         handleTyping();
     }}
         />
-        <IconButton onClick={handleSend}>
+        <IconButton onClick={()=>handleSend()}
+        
+        >
           <SendIcon/>
         </IconButton>
         </div>
