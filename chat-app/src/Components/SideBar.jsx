@@ -19,6 +19,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Pill from './Pill';
 
 
 
@@ -29,6 +30,10 @@ const token=JSON.parse(localStorage.getItem('token'));
 const searchUsers=useSelector((state)=>state.chat.searchUsers)
 const navigate=useNavigate();
 const [user,setUser]=useState(null);
+const [groupUser,setGroupUser]=useState({name:'',userName:''});
+const [suggestion,setSuggestion]=useState([]);
+const [selected,setSelected]=useState([]);
+
 const dispatch=useDispatch();
 
 
@@ -102,7 +107,25 @@ const dispatch=useDispatch();
     }
   };
 
+useEffect(()=>{
+  const fetchData=async()=>{
+    try {
+      
+      const data=await searchUserApi(groupUser.userName,token);
+      console.log(data.data);
+      console.log("searching")
+        setSuggestion([...data.data])
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
   
+  if(groupUser.userName){
+    fetchData();
+  }
+
+},[groupUser.userName])  
   
 
   
@@ -168,11 +191,8 @@ const dispatch=useDispatch();
           component: 'form',
           onSubmit: (event) => {
             event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries(formData.entries());
-            const name=formJson.user
-            const email = formJson.email;
-            console.log(email,name);
+            
+            
             handleClose();
           },
         }}
@@ -186,26 +206,46 @@ const dispatch=useDispatch();
             required
             margin="dense"
             id="name"
-            name="email"
+            name="name"
             label="Group Name"
             type="text"
             fullWidth
             variant="standard"
+            value={groupUser.name}
+            onChange={(e) => setGroupUser({ ...groupUser, [e.target.name]: e.target.value})}
           />
+          
           <TextField
             autoFocus
             required
             margin="dense"
             id="user"
-            name="user"
+            name="userName"
             label="Users"
             type="text"
             fullWidth
             variant="standard"
-           
+            value={groupUser.userName}
+            onChange={(e) => setGroupUser({ ...groupUser, [e.target.name]: e.target.value })}  
+            InputProps={{
+        startAdornment: (
+            <span className="start-adornment">{selected.length>0&&selected.map((ele)=>{
+              <Pill />
+            })} </span>
+        ),
+    }}         
           />
+           <ul className='suggestion-list'>
+   
+   {suggestion.length>0&&suggestion?.map((ele)=> (
+     <li key={ele._id} >{ele.name}</li>
+   ))}
+ </ul>
         </DialogContent>
+      
+       
         <DialogActions>
+       
           <Button onClick={handleClose}>Cancel</Button>
           <Button type="submit">Create</Button>
         </DialogActions>
