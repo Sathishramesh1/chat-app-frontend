@@ -48,6 +48,14 @@ const dispatch=useDispatch();
     setOpen(false);
   };
 
+ 
+ const handleSuggestion=(ele)=>{
+
+  setSelected([...selected, ele]);
+  // Clear suggestion list after selecting a user
+  setSuggestion([]);
+
+ } 
 
 
   const handleCreation=async(userId)=>{
@@ -127,7 +135,6 @@ useEffect(()=>{
 
 },[groupUser.userName])  
   
-
   
   return (
     <div className='sidebar-container'>
@@ -172,18 +179,13 @@ useEffect(()=>{
       ))}
     </ul>
     </div>
-
    <div className='sb-conversations'>
    {myChats.map((ele,i)=>{
     
     return <ConversationItem props={ele} key={ele._id}  />
    })}
-   
-    
-
-      
    </div>
-
+   
    <Dialog
         open={open}
         onClose={handleClose}
@@ -215,7 +217,7 @@ useEffect(()=>{
             onChange={(e) => setGroupUser({ ...groupUser, [e.target.name]: e.target.value})}
           />
           
-          <TextField
+          {/* <TextField
             autoFocus
             required
             margin="dense"
@@ -230,15 +232,16 @@ useEffect(()=>{
             InputProps={{
         startAdornment: (
             <span className="start-adornment">{selected.length>0&&selected.map((ele)=>{
-              <Pill />
+             return <Pill  name={ele.name}/>
             })} </span>
         ),
     }}         
-          />
+          /> */}
            <ul className='suggestion-list'>
    
    {suggestion.length>0&&suggestion?.map((ele)=> (
-     <li key={ele._id} >{ele.name}</li>
+   
+     <li key={ele._id}  onClick={()=>handleSuggestion(ele)}>{ele.name}</li>
    ))}
  </ul>
         </DialogContent>

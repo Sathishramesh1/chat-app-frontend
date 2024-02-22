@@ -326,3 +326,9 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   .suggestion-list::-webkit-scrollbar{
     display: none;
   }
+
+  .start-adornment{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+  }
