@@ -9,6 +9,7 @@ const chatSlice = createSlice({
         },
         isSmallScreen: window.innerWidth <= 768,
         showChatArea: false,
+        createGroup:false,
         myChats: [],
         searchUsers: [],
         selectedChat:[],
@@ -32,6 +33,13 @@ const chatSlice = createSlice({
             state.user.token=action.payload
            
 
+        },
+        openCreateGroup:(state,action)=>{
+            
+                 state.createGroup=true
+        },
+        closeCreateGroup:(state)=>{
+            return {...state,createGroup:false}
         },
         setMyChats:(state, action)=>{
             state.myChats = action.payload
@@ -93,5 +101,6 @@ const chatSlice = createSlice({
     }
 });
 
-export const { setIsSmallScreen,setShowChatArea,setUserToken,setMyChats,setSelectedChat, setsearchUsers, setSelectUser, setSelectForGrp, removeSelectForGrp, setEmpty, setAllMessages, setSingleMessage, setNewMessage } = chatSlice.actions
+export const { setIsSmallScreen,openCreateGroup,closeCreateGroup
+    ,setShowChatArea,setUserToken,setMyChats,setSelectedChat, setsearchUsers, setSelectUser, setSelectForGrp, removeSelectForGrp, setEmpty, setAllMessages, setSingleMessage, setNewMessage } = chatSlice.actions
 export default chatSlice.reducer

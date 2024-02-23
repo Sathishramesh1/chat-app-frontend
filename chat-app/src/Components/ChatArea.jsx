@@ -2,16 +2,17 @@ import React, { useEffect, useRef, useState } from 'react'
 import './myStyles.css'
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
-import { IconButton } from '@mui/material';
+import { IconButton, Menu, MenuItem } from '@mui/material';
 import MessagefromSelf from './MessagefromSelf';
 import MessagetoOthers from './MessagetoOthers';
-import { createChat, getChat, sendMessage } from '../Services/apiServices';
+import { addNewUser, createChat, getChat, sendMessage } from '../Services/apiServices';
 import { useParams } from 'react-router-dom';
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
 import { setAllMessages, setEmpty, setSelectedChat, setSingleMessage,setShowChatArea,setNewMessage } from '../redux/chatSlice';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import UserGroups from './UserGroups';
 
 const socket = io("https://chat-app-v1rl.onrender.com");
 
@@ -28,6 +29,17 @@ function ChatArea() {
   const {chatId}=useParams();
   const [message,setMessage]=useState({content:''});
   
+
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
  
   // console.log(chatId)
   const dummy={
@@ -86,6 +98,7 @@ const handleSend=async()=>{
        
         dispatch(setAllMessages(data.data));
         dispatch(setSelectedChat(data.data[0].chat));
+        
         // console.log([...allMessages])
         socket.emit("setup", { data: { id: id } }); 
        
@@ -115,6 +128,7 @@ const handleSend=async()=>{
       socket.off("message received"); // Cleanup event 
     };
   }, [chatId]);
+
   useEffect(() => {
     socket.on("onlineUsers", (users) => {
       console.log("Online Users:", users);
@@ -130,6 +144,8 @@ const handleSend=async()=>{
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView()
   };
+
+
   useEffect(() => {
     const typingTimeout = setTimeout(() => {
       setIsTyping(false);
@@ -143,14 +159,25 @@ const handleSend=async()=>{
     socket.emit("typing", { chatId, isTyping: true }); // Emit typing status
   };
 
-
   
-
+//scroll to bottom to see last message
   useEffect(() => {
-    // console.log("All messages changed:", allMessages); 
     
      scrollToBottom(); 
   }, [allMessages]);
+
+
+  const handleAddUser=async()=>{
+    try {
+      const response=await addNewUser()
+      console.log(response);
+    
+  } catch (error) {
+    console.log(error);
+    
+  }
+  }
+  
 
 
   return (
@@ -172,10 +199,20 @@ const handleSend=async()=>{
              (selectedChat &&selectedChat.users?.length>0&&selectedChat?.users[1]?.name)}</p>
             <p className='con-timeStamp'>{dummy.timeStamp}</p>
           </div>
-          <IconButton>
+          <IconButton onClick={handleClick}>
             {/* <DeleteIcon/> */}
             <MoreHorizIcon/>
           </IconButton>
+          <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          {/* Menu Items */}
+          <MenuItem onClick={handleClose}>Add a User</MenuItem>
+          <MenuItem onClick={handleClose}>Remove User</MenuItem>
+          <MenuItem onClick={handleClose}>Action 3</MenuItem>
+        </Menu>
         </div>
         <div className='message-container' >
          {allMessages.length>0&&[...allMessages].map((ele)=>(  
@@ -208,6 +245,7 @@ const handleSend=async()=>{
           <SendIcon/>
         </IconButton>
         </div>
+       
     </div>
   )
 }

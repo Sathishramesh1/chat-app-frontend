@@ -330,5 +330,9 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   .start-adornment{
     display: flex;
     flex-wrap: wrap;
-    width: 100%;
+   
   }
+
+  .unique-textfield .css-1x51dt5-MuiInputBase-input-MuiInput-input {
+    width: auto !important; /* Override width */
+}

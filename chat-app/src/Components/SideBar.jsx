@@ -10,16 +10,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import ConversationItem from './Conversation';
 import { useDispatch, useSelector } from 'react-redux';
 import { createChat, getAllChat, searchUserApi } from '../Services/apiServices';
-import { setsearchUsers } from '../redux/chatSlice';
+import { openCreateGroup, setsearchUsers } from '../redux/chatSlice';
 import { setMyChats } from '../redux/chatSlice';
 import { useNavigate } from 'react-router-dom';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import Pill from './Pill';
+import UserGroups from './UserGroups';
 
 
 
@@ -41,7 +36,7 @@ const dispatch=useDispatch();
   const [open, setOpen] = useState(false)
 
   const handleClickOpen = () => {
-    setOpen(true);
+    dispatch(openCreateGroup());
   };
 
   const handleClose = () => {
@@ -49,13 +44,7 @@ const dispatch=useDispatch();
   };
 
  
- const handleSuggestion=(ele)=>{
-
-  setSelected([...selected, ele]);
-  // Clear suggestion list after selecting a user
-  setSuggestion([]);
-
- } 
+ 
 
 
   const handleCreation=async(userId)=>{
@@ -138,8 +127,6 @@ useEffect(()=>{
   
   return (
     <div className='sidebar-container'>
-
-
    <div className='sb-header'>
    <div>
    <IconButton>
@@ -186,74 +173,8 @@ useEffect(()=>{
    })}
    </div>
    
-   <Dialog
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          component: 'form',
-          onSubmit: (event) => {
-            event.preventDefault();
-            
-            
-            handleClose();
-          },
-        }}
-      ><DialogTitle>Subscribe</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-           Create a New Group
-          </DialogContentText>
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="name"
-            name="name"
-            label="Group Name"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={groupUser.name}
-            onChange={(e) => setGroupUser({ ...groupUser, [e.target.name]: e.target.value})}
-          />
-          
-          {/* <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="user"
-            name="userName"
-            label="Users"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={groupUser.userName}
-            onChange={(e) => setGroupUser({ ...groupUser, [e.target.name]: e.target.value })}  
-            InputProps={{
-        startAdornment: (
-            <span className="start-adornment">{selected.length>0&&selected.map((ele)=>{
-             return <Pill  name={ele.name}/>
-            })} </span>
-        ),
-    }}         
-          /> */}
-           <ul className='suggestion-list'>
+  <UserGroups/>
    
-   {suggestion.length>0&&suggestion?.map((ele)=> (
-   
-     <li key={ele._id}  onClick={()=>handleSuggestion(ele)}>{ele.name}</li>
-   ))}
- </ul>
-        </DialogContent>
-      
-       
-        <DialogActions>
-       
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">Create</Button>
-        </DialogActions>
-      </Dialog>
-
 
     </div>
   )

@@ -70,3 +70,24 @@ export const sendMessage = async (payload,authToken) => {
     const response = await axios.post(`${BASE_URL}/message/`,payload,{headers});
     return response;
 };
+export const newGroup = async (payload,authToken) => {
+
+    const headers = {
+        'x-auth-token':authToken,
+        'Content-Type':'application/json', 
+    };
+    const response = await axios.post(`${BASE_URL}/chat/group`,payload,{headers});
+    return response;
+};
+
+export const addNewUser = async (payload,authToken) => {
+
+    const headers = {
+        'x-auth-token':authToken,
+        'Content-Type':'application/json', 
+    };
+    const response = await axios.put(`${BASE_URL}/chat/groupadd`,payload,{headers});
+    return response;
+};
+
+
