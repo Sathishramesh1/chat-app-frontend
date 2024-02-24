@@ -81,7 +81,6 @@ export const newGroup = async (payload,authToken) => {
 };
 
 export const addNewUser = async (payload,authToken) => {
-
     const headers = {
         'x-auth-token':authToken,
         'Content-Type':'application/json', 
@@ -90,4 +89,20 @@ export const addNewUser = async (payload,authToken) => {
     return response;
 };
 
+export const RemoveUserApi = async (payload,authToken) => {
+    const headers = {
+        'x-auth-token':authToken,
+        'Content-Type':'application/json', 
+    };
+    const response = await axios.put(`${BASE_URL}/chat/removeuser`,payload,{headers});
+    return response;
+};
 
+export const GroupRenameApi = async (payload,authToken) => {
+    const headers = {
+        'x-auth-token':authToken,
+        'Content-Type':'application/json', 
+    };
+    const response = await axios.put(`${BASE_URL}/chat/rename`,payload,{headers});
+    return response;
+};

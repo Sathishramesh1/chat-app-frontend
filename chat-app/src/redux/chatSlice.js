@@ -10,6 +10,8 @@ const chatSlice = createSlice({
         isSmallScreen: window.innerWidth <= 768,
         showChatArea: false,
         createGroup:false,
+        addUserToGroup:false,
+        removeUser:false,
         myChats: [],
         searchUsers: [],
         selectedChat:[],
@@ -17,7 +19,8 @@ const chatSlice = createSlice({
         selectForGrp: [],
         allMessages: [],
         newMessage: {},
-        newArrivalMessage: {}
+        newArrivalMessage: {},
+        groupNameChange:false
     },
 
     reducers:{
@@ -41,6 +44,17 @@ const chatSlice = createSlice({
         closeCreateGroup:(state)=>{
             return {...state,createGroup:false}
         },
+        setAddUsertoGroup:(state)=>{
+            
+           state.addUserToGroup=!state.addUserToGroup 
+             
+        },
+        toggleRemoveUser:(state)=>{
+            state.removeUser=!state.removeUser
+        },
+        toggleGroupName:(state,action)=>{
+             state.groupNameChange=!state.groupNameChange
+        },
         setMyChats:(state, action)=>{
             state.myChats = action.payload
         },
@@ -51,6 +65,19 @@ const chatSlice = createSlice({
         },
         setSelectedChat:(state,action)=>{
             state.selectedChat=action.payload
+        },
+        removeUserSelectedChat:(state,action)=>{
+            if (state.selectedChat) {
+                // Filter out the user to be removed from the selected chat's users array
+                state.selectedChat.users = state.selectedChat.users.filter(user => user._id !== action.payload._id);
+            }
+        
+        },
+        setGroupRename:(state,action)=>{
+            if(state.selectedChat){
+                state.selectedChat.chatName=action.payload
+            }
+            
         },
         setSelectUser:(state, action)=>{
             state.selectUser = action.payload
@@ -101,6 +128,8 @@ const chatSlice = createSlice({
     }
 });
 
-export const { setIsSmallScreen,openCreateGroup,closeCreateGroup
-    ,setShowChatArea,setUserToken,setMyChats,setSelectedChat, setsearchUsers, setSelectUser, setSelectForGrp, removeSelectForGrp, setEmpty, setAllMessages, setSingleMessage, setNewMessage } = chatSlice.actions
+export const { setIsSmallScreen,openCreateGroup,closeCreateGroup,
+    setAddUsertoGroup,toggleRemoveUser,removeUserSelectedChat,toggleGroupName,setGroupRename
+    ,setShowChatArea,setUserToken,setMyChats,setSelectedChat, setsearchUsers,
+     setSelectUser, setSelectForGrp, removeSelectForGrp, setEmpty, setAllMessages, setSingleMessage, setNewMessage } = chatSlice.actions
 export default chatSlice.reducer

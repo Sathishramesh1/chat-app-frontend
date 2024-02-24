@@ -16,7 +16,7 @@ function MessagetoOthers({content}) {
   // Convert to Indian Standard Time (IST)
   const istTimestamp = utcTimestamp.toLocaleString('en-IN', options);
 
-console.log(istTimestamp);
+
   return (
     <div className='message-other'>
     <span>{content.content}

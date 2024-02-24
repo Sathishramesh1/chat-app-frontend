@@ -9,12 +9,16 @@ import ChatArea from './Components/ChatArea';
 import CreateGroup from './Components/CreateGroup';
 import Register from './Pages/Register';
 import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 function App() {
  
   
 const token=useSelector((state)=>state.chat.user.token);
 // console.log(token)
+
+
+
 
   return (
     <>

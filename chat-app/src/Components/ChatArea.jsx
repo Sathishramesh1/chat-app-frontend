@@ -9,17 +9,20 @@ import { addNewUser, createChat, getChat, sendMessage } from '../Services/apiSer
 import { useParams } from 'react-router-dom';
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllMessages, setEmpty, setSelectedChat, setSingleMessage,setShowChatArea,setNewMessage } from '../redux/chatSlice';
+import { setAllMessages, setEmpty, setSelectedChat, setSingleMessage,setShowChatArea,setNewMessage, setAddUsertoGroup, toggleRemoveUser, toggleGroupName } from '../redux/chatSlice';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import UserGroups from './UserGroups';
+import AddUser from './AddUser';
+import RemoveUser from './RemoveUser';
+import RenameGroup from './RenameGroup';
+import { socket } from './MainContainer';
 
-const socket = io("https://chat-app-v1rl.onrender.com");
 
 function ChatArea() {
 
   const dispatch = useDispatch();
-  const {allMessages}=useSelector((state)=>state.chat);
+  const {allMessages,addUserToGroup}=useSelector((state)=>state.chat);
   const {selectedChat,showChatArea}=useSelector((state)=>state.chat);
   const token=JSON.parse(localStorage.getItem('token'));
   const id=JSON.parse(localStorage.getItem('user'));
@@ -70,15 +73,11 @@ const handleSend=async()=>{
    
     socket.emit("new message",msg)
     setMessage({content:''});
-
-    
+  
     
     const data=await sendMessage({...resetCopy,chatId:chatId},token);
     console.log(data)
-    // msg._id=data.data.chat._id
-    // msg.sender={...data.data.sender}
-    // console.log(msg)
-    
+  
     
     
     
@@ -129,17 +128,7 @@ const handleSend=async()=>{
     };
   }, [chatId]);
 
-  useEffect(() => {
-    socket.on("onlineUsers", (users) => {
-      console.log("Online Users:", users);
-      // Update your UI to display the list of online users
-    });
   
-    return () => {
-      // Cleanup function to remove the event listener when the component unmounts
-      socket.off("onlineUsers");
-    };
-  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView()
@@ -164,24 +153,33 @@ const handleSend=async()=>{
   useEffect(() => {
     
      scrollToBottom(); 
+     console.log(selectedChat)
   }, [allMessages]);
 
 
-  const handleAddUser=async()=>{
-    try {
-      const response=await addNewUser()
-      console.log(response);
-    
-  } catch (error) {
-    console.log(error);
-    
+  const handleAddUser=()=>{
+
+    dispatch(setAddUsertoGroup());
+    handleClose();
+
   }
+
+  const handleRemoveUser=()=>{
+   
+    dispatch(toggleRemoveUser());
+    handleClose();
+
   }
   
+  const handleGroupNameChange=()=>{
+   
+    dispatch(toggleGroupName());
+    handleClose();
+
+  }
 
 
   return (
-  
     <div className='chatarea-container'>
     
         <div className='chatheader-container'>
@@ -200,7 +198,7 @@ const handleSend=async()=>{
             <p className='con-timeStamp'>{dummy.timeStamp}</p>
           </div>
           <IconButton onClick={handleClick}>
-            {/* <DeleteIcon/> */}
+          
             <MoreHorizIcon/>
           </IconButton>
           <Menu
@@ -208,17 +206,17 @@ const handleSend=async()=>{
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          {/* Menu Items */}
-          <MenuItem onClick={handleClose}>Add a User</MenuItem>
-          <MenuItem onClick={handleClose}>Remove User</MenuItem>
-          <MenuItem onClick={handleClose}>Action 3</MenuItem>
+          
+          <MenuItem onClick={handleAddUser}>Add a User</MenuItem>
+          <MenuItem onClick={handleRemoveUser}>Remove User</MenuItem>
+          <MenuItem onClick={handleGroupNameChange}>Change Group Name</MenuItem>
         </Menu>
         </div>
         <div className='message-container' >
          {allMessages.length>0&&[...allMessages].map((ele)=>(  
          
-          <div ref={messagesEndRef} >
-          {console.log(ele,"el;e")}
+          <div ref={messagesEndRef}  key={ele?._id}>
+          
           {ele.sender._id===id?(<MessagefromSelf content={ele} key={ele?._id}/>)
          :
          (<MessagetoOthers content={ele}  key={ele?._id}/>)}
@@ -245,7 +243,9 @@ const handleSend=async()=>{
           <SendIcon/>
         </IconButton>
         </div>
-       
+       <AddUser/>
+       <RemoveUser/>
+       <RenameGroup/>
     </div>
   )
 }

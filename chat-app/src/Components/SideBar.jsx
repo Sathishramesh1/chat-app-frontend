@@ -5,7 +5,7 @@ import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import NightlightIcon from '@mui/icons-material/Nightlight';
-import {  Button, IconButton } from '@mui/material';
+import {  Button, IconButton, Menu, MenuItem } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ConversationItem from './Conversation';
 import { useDispatch, useSelector } from 'react-redux';
@@ -44,7 +44,16 @@ const dispatch=useDispatch();
   };
 
  
- 
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleOpenMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseUser = () => {
+    setAnchorEl(null);
+  };
 
 
   const handleCreation=async(userId)=>{
@@ -116,6 +125,7 @@ useEffect(()=>{
     } catch (error) {
       console.log(error);
     }
+
   }
   
   if(groupUser.userName){
@@ -123,15 +133,31 @@ useEffect(()=>{
   }
 
 },[groupUser.userName])  
+
+
+const logout=()=>{
+  localStorage.removeItem('token')
+  localStorage.removeItem('user');
+  navigate('/');
+}
   
   
   return (
     <div className='sidebar-container'>
    <div className='sb-header'>
    <div>
-   <IconButton>
+   <IconButton onClick={handleOpenMenu}>
    <AccountCircleIcon/>
    </IconButton>
+   <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleCloseUser}
+        >
+          {/* Menu Items */}
+          <MenuItem onClick={logout}>Logout</MenuItem>
+          
+        </Menu>
    </div>
    <div>
    <IconButton>
