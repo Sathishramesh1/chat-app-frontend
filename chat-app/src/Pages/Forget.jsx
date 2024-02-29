@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../Components/myStyles.css'
 import { useState } from 'react';
-import { LoginUser } from '../Services/apiServices';
+import { ForgetPassword, LoginUser } from '../Services/apiServices';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserToken } from '../redux/chatSlice'
 import { useNavigate } from 'react-router-dom';
@@ -40,13 +40,12 @@ export default function Forget() {
     event.preventDefault();
     try {
       // console.log(user)
-      const response = await LoginUser(user);
+      const response = await ForgetPassword(user);
       console.log(response)
-      const token=response.data.jwttoken
-      const id=response.data.user
-      console.log(token)
-   dispatch(setUserToken({token}));
-   localStorage.setItem("token",JSON.stringify(token))
+     
+      
+   
+   
    
    
       

@@ -18,7 +18,7 @@ const chatSlice = createSlice({
         selectUser: "",
         selectForGrp: [],
         allMessages: [],
-        newMessage: {},
+        message:{content:''},
         newArrivalMessage: {},
         groupNameChange:false
     },
@@ -63,6 +63,10 @@ const chatSlice = createSlice({
             state.searchUsers =action.payload
            
         },
+        updateMessageContent: (state, action) => {
+            state.message.content = action.payload;
+        
+        },
         setSelectedChat:(state,action)=>{
             state.selectedChat=action.payload
         },
@@ -105,10 +109,8 @@ const chatSlice = createSlice({
             
         },
         setSingleMessage:(state, action)=>{
-           
-                state.allMessages.push(action.payload);
-
             
+            state.allMessages.push(action.payload);
         },
         setNewMessage:(state, action)=>{
             
@@ -122,13 +124,16 @@ const chatSlice = createSlice({
                     return chat;
                 }
             });
+
+            
+            
         },
 
        
     }
 });
 
-export const { setIsSmallScreen,openCreateGroup,closeCreateGroup,
+export const { setIsSmallScreen,openCreateGroup,closeCreateGroup,updateMessageContent,
     setAddUsertoGroup,toggleRemoveUser,removeUserSelectedChat,toggleGroupName,setGroupRename
     ,setShowChatArea,setUserToken,setMyChats,setSelectedChat, setsearchUsers,
      setSelectUser, setSelectForGrp, removeSelectForGrp, setEmpty, setAllMessages, setSingleMessage, setNewMessage } = chatSlice.actions

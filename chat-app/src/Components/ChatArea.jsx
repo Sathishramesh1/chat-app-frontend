@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './myStyles.css'
+import moment from 'moment';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import { IconButton, Menu, MenuItem } from '@mui/material';
@@ -9,20 +10,22 @@ import { addNewUser, createChat, getChat, sendMessage } from '../Services/apiSer
 import { useParams } from 'react-router-dom';
 import { io } from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllMessages, setEmpty, setSelectedChat, setSingleMessage,setShowChatArea,setNewMessage, setAddUsertoGroup, toggleRemoveUser, toggleGroupName } from '../redux/chatSlice';
+import { setAllMessages, setEmpty, setSelectedChat, setSingleMessage,setShowChatArea,setNewMessage, setAddUsertoGroup, toggleRemoveUser, toggleGroupName, updateMessageContent } from '../redux/chatSlice';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import UserGroups from './UserGroups';
 import AddUser from './AddUser';
 import RemoveUser from './RemoveUser';
 import RenameGroup from './RenameGroup';
-import { socket } from './MainContainer';
+import { nanoid } from 'nanoid'
 
 
+const socket = io('https://chat-app-v1rl.onrender.com');
 function ChatArea() {
+  
 
   const dispatch = useDispatch();
-  const {allMessages,addUserToGroup}=useSelector((state)=>state.chat);
+  const {allMessages,addUserToGroup,message}=useSelector((state)=>state.chat);
   const {selectedChat,showChatArea}=useSelector((state)=>state.chat);
   const token=JSON.parse(localStorage.getItem('token'));
   const id=JSON.parse(localStorage.getItem('user'));
@@ -30,7 +33,7 @@ function ChatArea() {
   const [isTyping, setIsTyping] = useState(false);      
 
   const {chatId}=useParams();
-  const [message,setMessage]=useState({content:''});
+  // const [message,setMessage]=useState({content:''});
   
 
 
@@ -54,6 +57,7 @@ function ChatArea() {
  
 
 const handleSend=async()=>{
+ 
   try {
 
     if (!message.content.trim()) {
@@ -72,12 +76,10 @@ const handleSend=async()=>{
     scrollToBottom(); 
    
     socket.emit("new message",msg)
-    setMessage({content:''});
-  
+   dispatch(updateMessageContent(''));
     
     const data=await sendMessage({...resetCopy,chatId:chatId},token);
     console.log(data)
-  
     
     
     
@@ -93,12 +95,12 @@ const handleSend=async()=>{
         const token=JSON.parse(localStorage.getItem('token'));
         dispatch(setEmpty());
         const data=await getChat(chatId,token);
-        console.log(data);
+        console.log(data.data);
        
         dispatch(setAllMessages(data.data));
         dispatch(setSelectedChat(data.data[0].chat));
         
-        // console.log([...allMessages])
+       
         socket.emit("setup", { data: { id: id } }); 
        
       } catch (error) {
@@ -112,6 +114,7 @@ const handleSend=async()=>{
     }
     
   },[chatId]);
+
   useEffect(() => {
     socket.emit("join chat", chatId);
 
@@ -143,7 +146,7 @@ const handleSend=async()=>{
     return () => clearTimeout(typingTimeout);
   }, [message.content]);
 
-  const handleTyping = () => {
+  const handleUserTyping = () => {
     setIsTyping(true);
     socket.emit("typing", { chatId, isTyping: true }); // Emit typing status
   };
@@ -153,7 +156,7 @@ const handleSend=async()=>{
   useEffect(() => {
     
      scrollToBottom(); 
-     console.log(selectedChat)
+    
   }, [allMessages]);
 
 
@@ -178,6 +181,53 @@ const handleSend=async()=>{
 
   }
 
+  const formatDate = (date) => {
+    try {
+      // Attempt to parse the date string
+      const parsedDate = new Date(date);
+      
+      // Check if the parsed date is valid
+      if (!isNaN(parsedDate)) {
+        // Return the formatted date
+        return parsedDate.toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+      } else {
+       
+        return moment().format();;
+      }
+    } catch (error) {
+      
+      console.error("Error formatting date:", error);
+      return "Error";
+    }
+  };
+  
+
+  const handleTyping = (e) => {
+    if (e.key === "Enter") {
+      handleSend();
+      return
+    }
+    
+    dispatch(updateMessageContent((e.target.value)));
+    
+  };
+
+  useEffect(() => {
+    socket.on("onlineUsers", (users) => {
+      console.log("Online Users:", users);
+      
+    });
+  
+    return () => {
+      // Cleanup function to remove the event listener when the component unmounts
+      socket.off("onlineUsers");
+    };
+  }, []);
+
 
   return (
     <div className='chatarea-container'>
@@ -201,41 +251,53 @@ const handleSend=async()=>{
           
             <MoreHorizIcon/>
           </IconButton>
+          {selectedChat.chatName!=='sender'&&
           <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          
+        
           <MenuItem onClick={handleAddUser}>Add a User</MenuItem>
           <MenuItem onClick={handleRemoveUser}>Remove User</MenuItem>
           <MenuItem onClick={handleGroupNameChange}>Change Group Name</MenuItem>
+          
         </Menu>
+          }
         </div>
         <div className='message-container' >
-         {allMessages.length>0&&[...allMessages].map((ele)=>(  
-         
-          <div ref={messagesEndRef}  key={ele?._id}>
+         {allMessages.length>0 &&allMessages.map((ele,index)=>{
+
+          // Calculate the date for the current message
+      const currentDate = formatDate(ele.createdAt);
+
+// Determine if it's a new date compared to the previous message
+const previousMessage = index > 0 ? allMessages[index - 1] : null;
+const previousDate = previousMessage ? formatDate(previousMessage.createdAt) :null;
+const isNewDate = currentDate !== previousDate || index === 0; // Add index === 0 check for the first message
+
+// Check if it's the last message
+const isLastMessage = index === allMessages.length - 1;
+  return (
+          <div ref={messagesEndRef}  key={nanoid()}>
+          {isNewDate && <div className="date-header">{currentDate}</div>}          
           
-          {ele.sender._id===id?(<MessagefromSelf content={ele} key={ele?._id}/>)
+          {ele.sender._id===id?(<MessagefromSelf content={ele} />)
          :
-         (<MessagetoOthers content={ele}  key={ele?._id}/>)}
+         (<MessagetoOthers content={ele}  />)}
          </div>
-          
-         ))}
+         
+         )})}
         </div>
         <div className='input-container'>
         <input type='text' placeholder='Type a Message' className='searchbox'
-          value={message.content}
-          onChange={(e) => {
-          setMessage(prev => ({
-            ...prev,
-            content: e.target.value
-          }));
-        }}
-  onKeyDown={() => {
-        handleTyping();
+          value={message?.content||""}
+          onChange={(e) => dispatch(updateMessageContent(e.target.value))}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+      handleSend();}
     }}
+ 
         />
         <IconButton onClick={()=>handleSend()}
         

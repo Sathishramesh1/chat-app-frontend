@@ -28,7 +28,7 @@ const defaultTheme = createTheme({
   },
 });
 
-export default function SignIn() {
+export default function Reset() {
 
   const navigate=useNavigate();
  const dispatch=useDispatch();

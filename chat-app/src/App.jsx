@@ -10,6 +10,7 @@ import CreateGroup from './Components/CreateGroup';
 import Register from './Pages/Register';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import Forget from './Pages/Forget';
 
 function App() {
  
@@ -34,8 +35,10 @@ const token=useSelector((state)=>state.chat.user.token);
        {/* <Route path='create-group' element={<CreateGroup/>}/> */}
 
       </Route>
-      <Route path='/register' element={<Register/>
-      }/>
+      <Route path='/register' element={<Register/>}/>
+      <Route path='/forget' element={<Forget/>}/>
+      <Route path='/reset/:resetToken' element={<Forget/>} />
+      <Route/>
     </Routes>
       
     </div>

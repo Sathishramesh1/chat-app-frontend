@@ -179,23 +179,41 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 .message-self{
     display: flex;
     justify-content: flex-end;
-    align-items: right;
+    
+    /* width: fit-content; */
 
-    padding: 1rem;
+    padding: 0 1rem 1rem 1rem;
    
    span{
+    
     background-color: rgb(143, 188, 143);
     padding: 1rem;
     font-size: 1.25rem;
     border-radius: 20px;
    }
+
+ 
 }
+
+.me{
+    display: flex;
+    justify-content: end;
+    margin-right: 2rem;
+}
+
+.other{
+    display: flex;
+    margin-left: 2rem;
+}
+.message-self sup {
+    /* margin-left: auto;  */
+  }
 
 .message-other{
     display: flex;
 
     justify-content: space-between;
-    padding: 1rem;
+    padding: 0 1rem 1rem 1rem;
 
     span{
         background-color: rgb(223, 230, 223);
@@ -335,4 +353,7 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
   .unique-textfield .css-1x51dt5-MuiInputBase-input-MuiInput-input {
     width: auto !important; /* Override width */
+}
+.date-header{
+    text-align: center;
 }
