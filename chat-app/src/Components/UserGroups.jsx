@@ -114,11 +114,11 @@ if (input.current) {
             handleCreateGroup();
           },
         }}
-      ><DialogTitle>Subscribe</DialogTitle>
+      ><DialogTitle> Create a New Group</DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          {/* <DialogContentText>
            Create a New Group
-          </DialogContentText>
+          </DialogContentText> */}
           <TextField
             autoFocus
             required

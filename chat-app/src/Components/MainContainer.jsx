@@ -19,6 +19,7 @@ function MainContainer() {
       
   
   const dispatch = useDispatch();
+  const theme=useSelector((state)=>state.chat.theme);
   const isSmallScreen = useSelector(state => state.chat.isSmallScreen);
   const showChatArea = useSelector(state => state.chat.showChatArea);
 
@@ -39,7 +40,7 @@ function MainContainer() {
 
    
   return (
-    <div className='main-container'>
+    <div className={`main-container ${theme}`}>
         
         {isSmallScreen&& !showChatArea&&<SideBar />}
         {isSmallScreen&&showChatArea&&<Outlet/>}

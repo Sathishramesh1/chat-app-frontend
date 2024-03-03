@@ -3,6 +3,8 @@ import './myStyles.css'
 import { useNavigate } from 'react-router-dom'
 import { setSelectedChat, setShowChatArea } from '../redux/chatSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { Avatar } from '@mui/material';
+import moment from 'moment';
 
 
 function ConversationItem({props}) {
@@ -26,7 +28,17 @@ if(isSmallScreen){
   }
 
 
-
+  const renderTimeOrDate = (timestamp) => {
+    const messageDate = moment(timestamp);
+    const today = moment().startOf('day');
+    if (messageDate.isSame(today, 'day')) {
+      // If the message was sent today, display only time
+      return messageDate.format('HH:mm');
+    } else {
+      // If the message was sent on a different day, display the date
+      return messageDate.format('YYYY-MM-DD');
+    }
+  };
   
   return (
     <div className='conversation-container' onClick={()=>handleNavigation(props)} >
@@ -34,25 +46,27 @@ if(isSmallScreen){
     
     {props.chatName === "sender" ? (
       <>
-        <p className='con-icon'>{props?.users[1]?.name.charAt(0)}</p>
+        {/* <p className='con-icon'>{props?.users[1]?.name.charAt(0)}</p> */}
+       <div className='con-icon'> <Avatar alt={props.users[1].name} src="/static/images/avatar/1.jpg" /></div>
          <p className='con-title'>{props?.users[1]?.name}</p>
            <p className='con-latestMessage'>{props?.latestMessage?.content}</p>
-        <p className='con-timeStamp'>{props.timeStamp}</p>
+        <p className='con-timeStamp'>{renderTimeOrDate(props.updatedAt)}</p>
        
          </>
       ) : (
         <>
-        <p className='con-icon'>{props.chatName.charAt(0)}</p>
+        {/* <p className='con-icon'>{props.chatName.charAt(0)}</p> */}
+        <div className='con-icon'><Avatar alt={props.chatName} src="/static/images/avatar/1.jpg" /></div>
         <p className='con-title'>{props?.chatName}</p>
+
         <p className='con-latestMessage'>{props?.latestMessage?.content}</p>
-        <p className='con-timeStamp'>{props.timeStamp}</p>
+        <p className='con-timeStamp'>{renderTimeOrDate(props.updatedAt)}</p>
         </>
       )}
      
         
-        {/* <p className='con-title'>{props?.users[1].name}</p> */}
-        {/* <p className='con-latestMessage'>{props.lastMessage}</p>
-        <p className='con-timeStamp'>{props.timeStamp}</p> */}
+       
+      
     </div>
   )
 }

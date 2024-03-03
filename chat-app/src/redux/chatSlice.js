@@ -7,11 +7,13 @@ const chatSlice = createSlice({
             token:localStorage.getItem('token')||null,
             email:null
         },
+        theme: 'light',
         isSmallScreen: window.innerWidth <= 768,
         showChatArea: false,
         createGroup:false,
         addUserToGroup:false,
         removeUser:false,
+        searchPage:false,
         myChats: [],
         searchUsers: [],
         selectedChat:[],
@@ -27,6 +29,9 @@ const chatSlice = createSlice({
         setIsSmallScreen: (state, action) => {
             state.isSmallScreen = action.payload;
         },
+        toggleTheme: (state) => {
+            state.theme = state.theme === 'light' ? 'dark' : 'light';
+          },
         setShowChatArea: (state, action) => {
             state.showChatArea = action.payload;
         },
@@ -52,6 +57,10 @@ const chatSlice = createSlice({
         toggleRemoveUser:(state)=>{
             state.removeUser=!state.removeUser
         },
+        toggelSearch:(state)=>{
+            state.searchPage=!state.searchPage
+
+        },
         toggleGroupName:(state,action)=>{
              state.groupNameChange=!state.groupNameChange
         },
@@ -64,7 +73,11 @@ const chatSlice = createSlice({
            
         },
         updateMessageContent: (state, action) => {
-            state.message.content = action.payload;
+            if (state.message) {
+                state.message.content = action.payload;
+            } else {
+                state.message = { content: action.payload };
+            }
         
         },
         setSelectedChat:(state,action)=>{
@@ -133,7 +146,8 @@ const chatSlice = createSlice({
     }
 });
 
-export const { setIsSmallScreen,openCreateGroup,closeCreateGroup,updateMessageContent,
+export const { setIsSmallScreen,openCreateGroup,closeCreateGroup,updateMessageContent,toggleTheme,
+    toggelSearch,
     setAddUsertoGroup,toggleRemoveUser,removeUserSelectedChat,toggleGroupName,setGroupRename
     ,setShowChatArea,setUserToken,setMyChats,setSelectedChat, setsearchUsers,
      setSelectUser, setSelectForGrp, removeSelectForGrp, setEmpty, setAllMessages, setSingleMessage, setNewMessage } = chatSlice.actions

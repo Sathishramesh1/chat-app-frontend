@@ -10,11 +10,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import ConversationItem from './Conversation';
 import { useDispatch, useSelector } from 'react-redux';
 import { createChat, getAllChat, searchUserApi } from '../Services/apiServices';
-import { openCreateGroup, setsearchUsers } from '../redux/chatSlice';
+import { openCreateGroup, setsearchUsers, toggelSearch, toggleTheme } from '../redux/chatSlice';
 import { setMyChats } from '../redux/chatSlice';
-import { useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import Pill from './Pill';
 import UserGroups from './UserGroups';
+import SearchUser from './SearchUser';
 
 
 
@@ -25,14 +26,7 @@ const token=JSON.parse(localStorage.getItem('token'));
 const searchUsers=useSelector((state)=>state.chat.searchUsers)
 const navigate=useNavigate();
 const [user,setUser]=useState(null);
-const [groupUser,setGroupUser]=useState({name:'',userName:''});
-const [suggestion,setSuggestion]=useState([]);
-const [selected,setSelected]=useState([]);
-
 const dispatch=useDispatch();
-
-
-
   const [open, setOpen] = useState(false)
 
   const handleClickOpen = () => {
@@ -56,83 +50,43 @@ const dispatch=useDispatch();
   };
 
 
-  const handleCreation=async(userId)=>{
-    try {
-
-       const data=await createChat(userId,token);
-      console.log(data)
-       if(data.status==200){
-        
-        navigate(`chat/${data.data._id}`)
-       }
-    } catch (error) {
-      console.log(error)
-      
-    }
-  }
-
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getAllChat(token);
+        console.log(data);
+        dispatch(setMyChats(data.data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    if(!user){
+    fetchData();}
+  }, [ user,dispatch]);
 
   useEffect(()=>{
-   
-    const fetchData=async()=>{
-      try {
-        
-        const data=await searchUserApi(user,token);
-        console.log(data.data);
-        console.log(searchUsers)
-          dispatch(setsearchUsers(data.data))
-          console.log(searchUsers)
-        
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    if(user){
-      fetchData();
-    }
-
-    const fetchChat=async()=>{
-      try {
-        const data=await getAllChat(token);
-        dispatch(setMyChats(data.data))
-        
-      } catch (error) {
-        console.log(error);
-        
-      }
-    }
-   fetchChat();
-
-  },[user]);
-
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Backspace' && !user) {
-      // Dispatch an action to clear the search results
-      dispatch(setsearchUsers([]));
-    }
-  };
-
-useEffect(()=>{
-  const fetchData=async()=>{
-    try {
-      
-      const data=await searchUserApi(groupUser.userName,token);
-      console.log(data.data);
-      console.log("searching")
-        setSuggestion([...data.data])
-      
-    } catch (error) {
-      console.log(error);
-    }
-
-  }
+    if (user) {
+      const filteredChats = myChats.filter(chat => {
+        if (chat.isGroupChat || chat.chatName !== "sender") {
+          return chat?.chatName?.toLowerCase().includes(user?.toLowerCase());
+        } else {
+          const firstUserName = chat.users[0].name.toLowerCase();
+          return chat?.chatName?.toLowerCase().includes(user?.toLowerCase()) ||
+            firstUserName.includes(user?.toLowerCase());
+        }
+      });
   
-  if(groupUser.userName){
-    fetchData();
-  }
+      // console.log(filteredChats)
+      dispatch(setMyChats(filteredChats));
+    } 
 
-},[groupUser.userName])  
+  },[user])
+  
+  
+  
+
 
 
 const logout=()=>{
@@ -160,16 +114,17 @@ const logout=()=>{
         </Menu>
    </div>
    <div>
-   <IconButton>
+   <IconButton onClick={()=>dispatch(toggelSearch())}>
+   Users
    <PersonAddAlt1Icon/>
    </IconButton>
-   <IconButton>
+   {/* <IconButton>
    <GroupAddIcon/>
-   </IconButton>
+   </IconButton> */}
    <IconButton onClick={handleClickOpen}>
    <AddCircleIcon/>
    </IconButton>
-   <IconButton>
+   <IconButton onClick={()=>dispatch(toggleTheme())}>
    <NightlightIcon/>
    </IconButton>
    </div>
@@ -181,17 +136,11 @@ const logout=()=>{
     <input type='text' placeholder='search' className='searchbox'
 
       onChange={(e)=>setUser(e.target.value)}
-      onKeyDown={handleKeyDown}
+     
     />
     
    </div>
-   <div>    <ul className='suggestion-list'>
-   
-      {searchUsers.length>0&&searchUsers?.map((ele)=> (
-        <li key={ele._id}  onClick={()=>handleCreation(ele._id)}>{ele.name}</li>
-      ))}
-    </ul>
-    </div>
+ 
    <div className='sb-conversations'>
    {myChats.map((ele,i)=>{
     
@@ -200,6 +149,7 @@ const logout=()=>{
    </div>
    
   <UserGroups/>
+  <SearchUser/>
    
 
     </div>

@@ -3,7 +3,7 @@ import './myStyles.css'
 import moment from 'moment';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import { Avatar, IconButton, Menu, MenuItem } from '@mui/material';
 import MessagefromSelf from './MessagefromSelf';
 import MessagetoOthers from './MessagetoOthers';
 import { addNewUser, createChat, getChat, sendMessage } from '../Services/apiServices';
@@ -17,8 +17,8 @@ import UserGroups from './UserGroups';
 import AddUser from './AddUser';
 import RemoveUser from './RemoveUser';
 import RenameGroup from './RenameGroup';
-import { nanoid } from 'nanoid'
-
+import { nanoid } from 'nanoid';
+import { formatDate } from '../Services/helper';
 
 const socket = io('https://chat-app-v1rl.onrender.com');
 function ChatArea() {
@@ -33,10 +33,7 @@ function ChatArea() {
   const [isTyping, setIsTyping] = useState(false);      
 
   const {chatId}=useParams();
-  // const [message,setMessage]=useState({content:''});
-  
-
-
+ 
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -47,7 +44,7 @@ function ChatArea() {
     setAnchorEl(null);
   };
  
-  // console.log(chatId)
+ 
   const dummy={
     name:"hello",
       lastMessage:"hi1",
@@ -57,7 +54,6 @@ function ChatArea() {
  
 
 const handleSend=async()=>{
- 
   try {
 
     if (!message.content.trim()) {
@@ -67,6 +63,7 @@ const handleSend=async()=>{
     }
     // console.log(token)
     let resetCopy={...message}
+   
     
     console.log(message)
     let msg={...resetCopy,_id:chatId,sender:{_id:id}}
@@ -181,31 +178,6 @@ const handleSend=async()=>{
 
   }
 
-  const formatDate = (date) => {
-    try {
-      // Attempt to parse the date string
-      const parsedDate = new Date(date);
-      
-      // Check if the parsed date is valid
-      if (!isNaN(parsedDate)) {
-        // Return the formatted date
-        return parsedDate.toLocaleDateString(undefined, {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-      } else {
-       
-        return moment().format();;
-      }
-    } catch (error) {
-      
-      console.error("Error formatting date:", error);
-      return "Error";
-    }
-  };
-  
-
   const handleTyping = (e) => {
     if (e.key === "Enter") {
       handleSend();
@@ -221,7 +193,6 @@ const handleSend=async()=>{
       console.log("Online Users:", users);
       
     });
-  
     return () => {
       // Cleanup function to remove the event listener when the component unmounts
       socket.off("onlineUsers");
@@ -231,16 +202,13 @@ const handleSend=async()=>{
 
   return (
     <div className='chatarea-container'>
-    
         <div className='chatheader-container'>
-
         {showChatArea&&<IconButton onClick={()=>dispatch(setShowChatArea(false))}>
             <KeyboardBackspaceIcon/>
-            
           </IconButton>}
-        
-          <p className='con-icon'>{!selectedChat?.isGroupChat &&<img />}</p>
-        
+          {/* <p className='con-icon'>{!selectedChat?.isGroupChat &&<img />}</p> */}
+        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+           
           <div className='header-text'>
             <p className='con-title '>{selectedChat.chatName!=='sender'?
             (selectedChat?.chatName): 
@@ -248,7 +216,6 @@ const handleSend=async()=>{
             <p className='con-timeStamp'>{dummy.timeStamp}</p>
           </div>
           <IconButton onClick={handleClick}>
-          
             <MoreHorizIcon/>
           </IconButton>
           {selectedChat.chatName!=='sender'&&
@@ -257,20 +224,16 @@ const handleSend=async()=>{
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-        
           <MenuItem onClick={handleAddUser}>Add a User</MenuItem>
           <MenuItem onClick={handleRemoveUser}>Remove User</MenuItem>
           <MenuItem onClick={handleGroupNameChange}>Change Group Name</MenuItem>
-          
         </Menu>
           }
         </div>
         <div className='message-container' >
          {allMessages.length>0 &&allMessages.map((ele,index)=>{
-
           // Calculate the date for the current message
       const currentDate = formatDate(ele.createdAt);
-
 // Determine if it's a new date compared to the previous message
 const previousMessage = index > 0 ? allMessages[index - 1] : null;
 const previousDate = previousMessage ? formatDate(previousMessage.createdAt) :null;
@@ -286,10 +249,9 @@ const isLastMessage = index === allMessages.length - 1;
          :
          (<MessagetoOthers content={ele}  />)}
          </div>
-         
          )})}
         </div>
-        <div className='input-container'>
+        <div className='input-container'> 
         <input type='text' placeholder='Type a Message' className='searchbox'
           value={message?.content||""}
           onChange={(e) => dispatch(updateMessageContent(e.target.value))}
@@ -297,10 +259,8 @@ const isLastMessage = index === allMessages.length - 1;
             if (e.key === "Enter") {
       handleSend();}
     }}
- 
         />
         <IconButton onClick={()=>handleSend()}
-        
         >
           <SendIcon/>
         </IconButton>
