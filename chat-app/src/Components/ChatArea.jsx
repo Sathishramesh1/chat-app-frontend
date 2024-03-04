@@ -149,6 +149,25 @@ const handleSend=async()=>{
   };
 
   
+  useEffect(() => {
+    // Listen for "typing" events from the server
+    socket.on("typing", ({ chatId, isTyping }) => {
+        // Check if the typing event is for the current chat
+        // Assuming userId is the socket ID of the user typing
+       
+            setIsTyping(isTyping);
+            console.log("typing")
+        
+    });
+
+    // Clean up listener when component unmounts
+    return () => {
+        socket.off("typing");
+    };
+}, [chatId, selectedChat]);
+
+
+
 //scroll to bottom to see last message
   useEffect(() => {
     
@@ -191,6 +210,8 @@ const handleSend=async()=>{
   useEffect(() => {
     socket.on("onlineUsers", (users) => {
       console.log("Online Users:", users);
+ 
+
       
     });
     return () => {
@@ -213,7 +234,7 @@ const handleSend=async()=>{
             <p className='con-title '>{selectedChat.chatName!=='sender'?
             (selectedChat?.chatName): 
              (selectedChat &&selectedChat.users?.length>0&&selectedChat?.users[1]?.name)}</p>
-            <p className='con-timeStamp'>{dummy.timeStamp}</p>
+            <p className='con-timeStamp'>{isTyping?("typing"):(dummy.timeStamp)}</p>
           </div>
           <IconButton onClick={handleClick}>
             <MoreHorizIcon/>
