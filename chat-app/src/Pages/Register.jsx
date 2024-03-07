@@ -18,6 +18,8 @@ import { LoginUser, RegisterUser } from '../Services/apiServices';
 import { useRef } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import { toast } from 'react-toastify';
+import { BounceLoader } from 'react-spinners';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -52,20 +54,50 @@ const validationSchema = yup.object({
 
 
 export default function Register() {
-
+  const [loading,setLoading]=useState(false);
   
 
 
   const handleSubmit = async() => {
+    setLoading(true)
     
     try {
              
       const response = await RegisterUser(formik.values);
+      if(response.status==201){
+        setLoading(false);
+        
+      toast.success("Login Successfully", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
+      }else{
+        toast.error("Unable to Login", {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
+
       console.log(response)
       
     } catch (error) {
       console.log(error);
       
+    }finally{
+      setLoading(false);
     }
    
   };
@@ -93,6 +125,7 @@ const formik = useFormik({
 
 
   return (
+    <>
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs" fixed={true}  className='login'>
         <CssBaseline />
@@ -188,5 +221,13 @@ const formik = useFormik({
         </Box>
       </Container>
     </ThemeProvider>
+    {loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', position: 'fixed', width: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)', zIndex: 9999 }}>
+          <BounceLoader color="#36d7b7" loading={loading} size={200} />
+        </Box>
+      )}
+
+
+    </>
   );
 }

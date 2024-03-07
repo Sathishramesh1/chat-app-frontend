@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../Components/myStyles.css'
 import { useState } from 'react';
-import { ForgetPassword, LoginUser } from '../Services/apiServices';
+import {  ForgetPasswordApi, LoginUser } from '../Services/apiServices';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserToken } from '../redux/chatSlice'
 import { useNavigate } from 'react-router-dom';
@@ -39,15 +39,9 @@ export default function Forget() {
   const handleSubmit = async(event) => {
     event.preventDefault();
     try {
-      // console.log(user)
-      const response = await ForgetPassword(user);
-      console.log(response)
-     
       
-   
-   
-   
-   
+      const response = await ForgetPasswordApi(user);
+      console.log(response)  
       
     } catch (error) {
       console.log(error);
@@ -101,11 +95,7 @@ export default function Forget() {
               Send Reset Mail
             </Button>
             <Grid container>
-              {/* <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid> */}
+             
               <Grid item>
                 <Link href="/register" variant="body2">
                   {"Don't have an account? Sign Up"}

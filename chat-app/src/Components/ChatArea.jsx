@@ -19,6 +19,7 @@ import RemoveUser from './RemoveUser';
 import RenameGroup from './RenameGroup';
 import { nanoid } from 'nanoid';
 import { formatDate } from '../Services/helper';
+import { toast } from 'react-toastify';
 
 const socket = io('https://chat-app-v1rl.onrender.com');
 function ChatArea() {
@@ -78,8 +79,6 @@ const handleSend=async()=>{
     const data=await sendMessage({...resetCopy,chatId:chatId},token);
     console.log(data)
     
-    
-    
   } catch (error) {
     console.log(error)
     
@@ -116,9 +115,20 @@ const handleSend=async()=>{
     socket.emit("join chat", chatId);
 
     socket.on("message received", (msg) => {
+      toast.success(`new message `, {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
       console.log(msg,"checking")
       dispatch(setNewMessage(msg));
       dispatch(setSingleMessage(msg));
+      
     
     });
    
@@ -153,64 +163,44 @@ const handleSend=async()=>{
     // Listen for "typing" events from the server
     socket.on("typing", ({ chatId, isTyping }) => {
         // Check if the typing event is for the current chat
-        // Assuming userId is the socket ID of the user typing
-       
+        // Assuming userId is the socket ID of the user typing 
             setIsTyping(isTyping);
-            console.log("typing")
+           console.log("typing")
         
     });
-
     // Clean up listener when component unmounts
     return () => {
         socket.off("typing");
     };
 }, [chatId, selectedChat]);
 
-
-
 //scroll to bottom to see last message
   useEffect(() => {
-    
-     scrollToBottom(); 
-    
+     scrollToBottom();     
   }, [allMessages]);
 
-
   const handleAddUser=()=>{
-
     dispatch(setAddUsertoGroup());
-    handleClose();
-
-  }
+    handleClose();}
 
   const handleRemoveUser=()=>{
-   
     dispatch(toggleRemoveUser());
-    handleClose();
-
-  }
+    handleClose(); }
   
   const handleGroupNameChange=()=>{
-   
     dispatch(toggleGroupName());
-    handleClose();
-
-  }
+    handleClose();}
 
   const handleTyping = (e) => {
     if (e.key === "Enter") {
       handleSend();
       return
     }
-    
-    dispatch(updateMessageContent((e.target.value)));
-    
-  };
+    dispatch(updateMessageContent((e.target.value)));};
 
   useEffect(() => {
     socket.on("onlineUsers", (users) => {
       console.log("Online Users:", users);
- 
 
       
     });

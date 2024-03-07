@@ -18,6 +18,8 @@ import { LoginUser } from '../Services/apiServices';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserToken } from '../redux/chatSlice'
 import { useNavigate } from 'react-router-dom';
+import { BounceLoader } from 'react-spinners';
+import { toast } from 'react-toastify';
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme({
@@ -37,28 +39,119 @@ export default function SignIn() {
     password:"" 
   
   });
+  const [loading,setLoading]=useState(false);
+
+
   const handleSubmit = async(event) => {
     event.preventDefault();
+    setLoading(true);
+   
     try {
       // console.log(user)
+      setUser({ email: '', password: '' });
       const response = await LoginUser(user);
-      console.log(response)
+      
+      // console.log(response)
+      if(response.status==200){
+        setLoading(false);
       const token=response.data.jwttoken
       const id=response.data.user
-      console.log(token)
+      // console.log(token)
+
+      toast.success("Login Successfully", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
    dispatch(setUserToken({token}));
    localStorage.setItem("token",JSON.stringify(token))
    localStorage.setItem("user",JSON.stringify(id));
-    navigate('/app/welcome')
+    navigate('/app/welcome')}
+    else{
+      toast.error("Unable to Login", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+
+
       
     } catch (error) {
       console.log(error);
       
+    }finally{
+      setLoading(false)
     }
    
   };
 
+
+  const handleDemo=async(e)=>{
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+
+      const response = await LoginUser({email:"demouser@gmail.com",password:'1234567890'});
+      if(response.status=200){
+
+
+
+        setLoading(false);
+      const token=response.data.jwttoken
+      const id=response.data.user
+      // console.log(token)
+
+      toast.success("Login Successfully", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+   dispatch(setUserToken({token}));
+   localStorage.setItem("token",JSON.stringify(token))
+   localStorage.setItem("user",JSON.stringify(id));
+    navigate('/app/welcome')
+
+      }else{
+        toast.error("Unable to Login", {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
+   
+    } catch (error) {
+      console.log(error);
+      
+    }finally{
+      setLoading(false)
+    }
+
+  }
+
   return (
+    <>
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs" fixed={true}  className='login'>
         <CssBaseline />
@@ -87,6 +180,7 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              value={user.email}
               onChange={(e)=>setUser({...user,[e.target.name]:e.target.value})}
             />
             <TextField
@@ -97,6 +191,7 @@ export default function SignIn() {
               label="Password"
               type="password"
               id="password"
+              value={user.password}
               autoComplete="password"
               onChange={(e)=>setUser({...user,[e.target.name]: e.target.value })}
             />
@@ -105,13 +200,25 @@ export default function SignIn() {
               label="Remember me"
             />
             <Button
+              type="click"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              
+            >
+              Sign In
+            </Button>
+            <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={handleDemo}
             >
-              Sign In
+              Login as Demo user
             </Button>
+            
+            
             <Grid container>
               <Grid item xs>
                 <Link href="/forget" variant="body2">
@@ -128,5 +235,12 @@ export default function SignIn() {
         </Box>
       </Container>
     </ThemeProvider>
+    {loading && (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', position: 'fixed', width: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)', zIndex: 9999 }}>
+      <BounceLoader color="#36d7b7" loading={loading} size={200} />
+    </Box>
+  )}
+
+    </>
   );
 }

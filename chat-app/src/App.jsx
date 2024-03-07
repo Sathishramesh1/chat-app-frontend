@@ -11,6 +11,9 @@ import Register from './Pages/Register';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import Forget from './Pages/Forget';
+import ResetPassword from './Pages/Reset';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
  
@@ -37,10 +40,10 @@ const token=useSelector((state)=>state.chat.user.token);
       </Route>
       <Route path='/register' element={<Register/>}/>
       <Route path='/forget' element={<Forget/>}/>
-      <Route path='/reset/:resetToken' element={<Forget/>} />
+      <Route path='/reset/:resetToken' element={<ResetPassword/>} />
       <Route/>
     </Routes>
-      
+    <ToastContainer />
     </div>
   
    

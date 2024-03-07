@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../Components/myStyles.css'
 import { useState } from 'react';
-import { LoginUser } from '../Services/apiServices';
+import { LoginUser, ResetPasswordApi } from '../Services/apiServices';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserToken } from '../redux/chatSlice'
 import { useNavigate } from 'react-router-dom';
@@ -28,12 +28,11 @@ const defaultTheme = createTheme({
   },
 });
 
-export default function Reset() {
+export default function ResetPassword() {
 
   const navigate=useNavigate();
  const dispatch=useDispatch();
   const [user,setUser]=useState({
-    email:"",
     password:"" 
   
   });
@@ -41,15 +40,14 @@ export default function Reset() {
     event.preventDefault();
     try {
       // console.log(user)
-      const response = await LoginUser(user);
+      const response = await ResetPasswordApi(user,token);
       console.log(response)
       const token=response.data.jwttoken
       const id=response.data.user
       console.log(token)
-   dispatch(setUserToken({token}));
-   localStorage.setItem("token",JSON.stringify(token))
-   localStorage.setItem("user",JSON.stringify(id));
-    navigate('/app/welcome')
+  
+  
+    navigate('/')
       
     } catch (error) {
       console.log(error);
@@ -75,20 +73,9 @@ export default function Reset() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Reset Password
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              onChange={(e)=>setUser({...user,[e.target.name]:e.target.value})}
-            />
             <TextField
               margin="normal"
               required
@@ -100,26 +87,26 @@ export default function Reset() {
               autoComplete="password"
               onChange={(e)=>setUser({...user,[e.target.name]: e.target.value })}
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Reset
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
+                <Link href="/" variant="body2">
+                  SignIn
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

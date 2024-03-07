@@ -146,9 +146,12 @@ const chatSlice = createSlice({
     }
 });
 
-export const { setIsSmallScreen,openCreateGroup,closeCreateGroup,updateMessageContent,toggleTheme,
+export const { setIsSmallScreen,openCreateGroup,closeCreateGroup,
+    updateMessageContent,toggleTheme,
     toggelSearch,
-    setAddUsertoGroup,toggleRemoveUser,removeUserSelectedChat,toggleGroupName,setGroupRename
+    setAddUsertoGroup,toggleRemoveUser,removeUserSelectedChat,
+    toggleGroupName,setGroupRename
     ,setShowChatArea,setUserToken,setMyChats,setSelectedChat, setsearchUsers,
-     setSelectUser, setSelectForGrp, removeSelectForGrp, setEmpty, setAllMessages, setSingleMessage, setNewMessage } = chatSlice.actions
+     setSelectUser, setSelectForGrp, removeSelectForGrp, setEmpty, 
+     setAllMessages, setSingleMessage, setNewMessage } = chatSlice.actions
 export default chatSlice.reducer

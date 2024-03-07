@@ -14,12 +14,12 @@ export const LoginUser = async (payload) => {
     return response;
 };
 
-export const ForgetPassword = async (payload) => {
+export const ForgetPasswordApi = async (payload) => {
     const response = await axios.post(`${BASE_URL}/user/forget`, payload);
     return response;
 };
 
-export const ResetPassword = async (payload,resetToken) => {
+export const ResetPasswordApi = async (payload,resetToken) => {
     const response = await axios.post(`${BASE_URL}/user/reset/${resetToken}`, payload);
     return response;
 };
